@@ -13,10 +13,10 @@
   :source-paths ["src"]
 
   :cljsbuild { 
-    :builds [{:id "muuuuu"
+    :builds [{:id "dev"
               :source-paths ["src"]
               :compiler {
-                :output-to "muuuuu.js"
+                :output-to "out/muuuuu.js"
                 :output-dir "out"
                 :optimizations :none
                 :source-map true}}]})

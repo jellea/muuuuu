@@ -41,26 +41,24 @@
 (defn init [app owner]
   (reify
     om/IDidMount
-    (did-mount [_ _]
+    (did-mount [_]
       (.panelSnap (js/$ ".chat") #js {:$menu (js/$ ".joinchatmenu")
                                       :slideSpeed 120
-                                      :menuSelection "li"})
+                                      :menuSelector "li"})
 
-      ;(.on (js/$ ".chat") "panelsnap:start" (fn [self, target]
+      (.on (js/$ ".chat") "panelsnap:start" (fn [self, target]
         ;; - iterate through excisting rooms and set inviewport to false if
         ;; title doesnt match
         ;; - push list
-        ;(def title (.attr target "data-panel"))
 
-        ;(om/transact! app [:rooms]
-          ;(fn [rooms]
-            ;(map
-              ;(fn [a]
-                ;(if (= (:title a) title)
-                  ;(merge a {:inviewport true})
-                  ;(merge a {:inviewport false})))
-              ;rooms)
-          ;))))
+        (om/transact! app [:rooms]
+          (fn [rooms]
+            (map
+              (fn [a] (if (= (:title a) (.attr target "data-panel"))
+                  (merge a {:inviewport true})
+                  (merge a {:inviewport false})))
+              rooms)
+      ))))
     )
     om/IRender
     (render [_]

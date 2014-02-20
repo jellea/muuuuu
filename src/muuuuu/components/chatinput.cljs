@@ -1,6 +1,7 @@
 (ns muuuuu.components.chatinput
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
+            [clojure.string]
             [muuuuu.utils :refer [guid]]))
 
 (enable-console-print!)
@@ -38,6 +39,9 @@
   (om/component
       (dom/div #js {:className "chatinput"}
         (dom/form #js {:onSubmit #(handle-submit % owner)}
-          (dom/div #js {:className "name"} (:yourname app))
+          (dom/div #js {:className (str "name"
+            (if (:bright (:color (first
+               (filter (fn [r] (= (:inviewport r) true)) (:rooms app)))) true) "" " bright"))}
+            (:yourname app))
           (dom/input #js {:className "yourmessage" :type "text" :ref "yourmessage" :placeholder "Your Message"})
           (dom/input #js {:type "submit" :value "Send!"})))))

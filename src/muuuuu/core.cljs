@@ -14,10 +14,10 @@
   (atom
      {:yourname "your name"
       :rooms
-      [{:title "Jazz" :color {:hex "34495e" :bright false} :usercount 123 :id (guid)}
-       {:title "Techno" :color {:hex "16a085"} :usercount 456 :id (guid)}
-       {:title "Metal" :color {:hex "27ae60"} :usercount 789 :id (guid)}
-       {:title "Ambient" :color {:hex "2980b9" :bright false} :usercount 543 :id (guid)}
+      [{:title "Jazz" :color {:hex "34495e" :bright false} :inviewport true :usercount 123 :id (guid)}
+       {:title "Techno" :color {:hex "16a085"} :inviewport false :usercount 456 :id (guid)}
+       {:title "Metal" :color {:hex "27ae60"} :inviewport false :usercount 789 :id (guid)}
+       {:title "Ambient" :color {:hex "2980b9" :bright false} :inviewport false :usercount 543 :id (guid)}
        ]
      :releases [
        {:img "http://yaj0kz2x.zvq.me/197358b7bdf9735260715f06b79d0fc0c0c29612089e08249fe8d5cfc6e29ed8.300x300.jpg" :id (guid)}
