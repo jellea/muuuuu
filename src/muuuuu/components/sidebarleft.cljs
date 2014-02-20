@@ -2,7 +2,7 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [clojure.string]
-            [muuuuu.utils :refer [guid]]))
+            [muuuuu.utils :refer [guid get-next-color]]))
 
 (enable-console-print!)
 
@@ -31,21 +31,30 @@
 
 (defn addChannel [title app]
   "Puts a new channel in the app-state"
-  (let [[room] [{:title title :color {:hex "ff0000" :bright false} :id (guid)}]]
+  (let [[room] [{:title title :color (get-next-color) :inviewport false :id (guid)}]]
     (om/transact! app [:rooms]
-      (fn [rooms] (conj rooms room))))
-)
+      (fn [rooms] (conj rooms room)))))
 
 (defn newChannel
   "Handles form submit"
   [e owner app]
   (let [[channelname channel-node] (value-from-node owner "channelname")]
     (when channelname
+      ;(prn channelname))
       (addChannel channelname app)
       (clear-nodes! channel-node))
     false))
 
-(defn channel [{:keys [title color]} app owner]
+(defn joinedchannel [{:keys [title color]} app owner]
+  (om/component
+    (dom/li
+      #js {:data-panel title
+           :className (if (false? (:bright color)) "bright")
+           :style  #js {:borderColor (str "#" (:hex color))
+                        :backgroundColor (str "#" (:hex color))}}
+      (dom/a nil title))))
+
+(defn popularchannels [{:keys [title color]} app owner]
   (om/component
     (dom/li
       #js {:data-panel title
@@ -66,8 +75,7 @@
    (dom/div #js {:className "sidebar"}
       (dom/div #js {:className "channellist"}
          (apply dom/ul #js {:className "joinchatmenu"}
-                (om/build-all channel (:rooms app) {:key :id}))
-         (dom/ul nil 
+                (om/build-all joinedchannel (:rooms app) {:key :id}))
+         (apply dom/ul nil
                  (om/build addchannelform app)
-                 ;(om/build-all channel (:rooms app) {:key :id})
-                 )))))
+                 (om/build-all popularchannels (:rooms app) {:key :id}))))))

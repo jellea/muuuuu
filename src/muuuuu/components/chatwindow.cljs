@@ -22,11 +22,12 @@
     om/IWillMount
     (will-mount [_])
     om/IDidMount
-    (did-mount [_ _]
+    (did-mount [_]
       ; jump to chatroom on mount
-      ;(.panelSnap (js/$ ".chat") "snapToPanel"
-                  ;(js/$ (str "[data-panel=" title "]")))
-      (prn (str title " mounted")))
+      (.panelSnap (js/$ ".chat") "snapToPanel"
+                  (js/$ (str "[data-panel=" title "]"))
+      )
+    )
     om/IRender
     ; if inviewport give class 'selected'
     (render [_]
@@ -51,14 +52,15 @@
         ;; title doesnt match
         ;; - push list
 
-        (om/transact! app [:rooms]
-          (fn [rooms]
-            (map
-              (fn [a] (if (= (:title a) (.attr target "data-panel"))
-                  (merge a {:inviewport true})
-                  (merge a {:inviewport false})))
-              rooms)
-      ))))
+        ;(om/transact! app [:rooms]
+          ;(fn [rooms]
+            ;(map
+              ;(fn [a] (if (= (:title a) (.attr target "data-panel"))
+                  ;(merge a {:inviewport true})
+                  ;(merge a {:inviewport false})))
+              ;rooms)
+        ;))
+      ))
     )
     om/IRender
     (render [_]
