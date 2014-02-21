@@ -32,7 +32,7 @@
 (defn addChannel [title app]
   "Puts a new channel in the app-state"
   (let [[room] [{:title title :color (get-next-color) :inviewport false :id (guid)}]]
-    (om/transact! app [:rooms]
+    (om/transact! app [:rooms :joined]
       (fn [rooms] (conj rooms room)))))
 
 (defn newChannel
@@ -40,28 +40,27 @@
   [e app owner]
   (let [[channelname channel-node] (value-from-node owner "channelname")]
     (when channelname
-      ;(prn channelname))
       (addChannel channelname app)
       (clear-nodes! channel-node))
     false))
 
-(defn joinedchannel [data app owner]
-  (let [[title colors] [(first data) (:color (second data))]]
+(defn joinedchannel [{:keys [title color]} app owner]
   (om/component
     (dom/li
       #js {:data-panel title
-           :className (if (false? (:bright :color (second room))) "bright")
-           :style  #js {:borderColor (str "#" (:hex :color (second room)))
-                        :backgroundColor (str "#" (:color :hex (second room)))}}
-      (dom/a nil (first room))))))
+           :className (if (false? (:bright color)) "bright")
+           :style  #js {:borderColor (str "#" (:hex color))
+                        :backgroundColor (str "#" (:hex color))}}
+      (dom/a nil title))))
 
 (defn popularchannels [app owner opts]
+  (let [[title][(first app)]]
   (om/component
       (dom/li nil
-        (dom/a #js {:onClick #(addChannel % opts)}
-          (first app)
+        (dom/a #js {:onClick #(addChannel title opts)}
+          title
           ;(dom/span #js {:className "count"} 3)
-        ))))
+          )))))
 
 (defn addchannelform [app owner]
   (om/component

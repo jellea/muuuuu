@@ -1,0 +1,106 @@
+.chat
+  .message
+    font-size                 1em
+    display                   flex
+    display                   -webkit-flex
+    padding                   1em 0 1em 0
+    .sender
+      min-width               8em
+      white-space             wrap
+      overflow                hidden
+      text-overflow           ellipsis
+      padding                 0.2em 0.5em 0.2em 0
+
+    .content
+      border-left             3px solid #fff
+      padding                 0.2em 0.5em 0.2em 0.5em
+      max-width               40em
+
+  .action
+    .content
+      border-left             3px solid #ff0000
+
+  .self
+    .content
+      border                  1px solid #222
+
+  .bright
+    color                     #fff
+
+  .bright a
+    color                     #fff
+
+  .bright .self .content
+    border                    1px solid #fff
+
+.roll-link
+  display                     inline-block
+  overflow hidden
+
+  vertical-align top
+
+  -webkit-perspective 600px
+  -moz-perspective 600px
+  -ms-perspective 600px
+  perspective 600px
+
+  -webkit-perspective-origin 50% 50%
+  -moz-perspective-origin 50% 50%
+  -ms-perspective-origin 50% 50%
+  perspective-origin 50% 50%
+
+
+.roll-link:hover
+  text-decoration        none
+
+.roll-link span
+  display block
+  position relative
+  padding 0 2px
+
+  -webkit-transition all 400ms ease
+  -moz-transition all 400ms ease
+  -ms-transition all 400ms ease
+  transition all 400ms ease
+    
+  -webkit-transform-origin 50% 0%
+  -moz-transform-origin 50% 0%
+  -ms-transform-origin 50% 0%
+  transform-origin 50% 0%
+    
+  -webkit-transform-style preserve-3d
+  -moz-transform-style preserve-3d
+  -ms-transform-style preserve-3d
+  transform-style preserve-3d
+
+.roll-link:hover span
+  background #e93a30
+         
+
+  -webkit-transform translate3d( 0px, 0px, -30px ) rotateX( 90deg )
+  -moz-transform translate3d( 0px, 0px, -30px ) rotateX( 90deg )
+  -ms-transform translate3d( 0px, 0px, -30px ) rotateX( 90deg )
+  transform translate3d( 0px, 0px, -30px ) rotateX( 90deg )
+
+
+.roll-link span::after
+  content attr(data-title)
+
+  display block
+  position absolute
+  left 0
+  top 0
+  padding 0 2px
+
+  color #fff
+  background #e93a30
+
+  -webkit-transform-origin 50% 0%
+  -moz-transform-origin 50% 0%
+  -ms-transform-origin 50% 0%
+  transform-origin 50% 0%
+
+  -webkit-transform translate3d( 0px, 105%, 0px ) rotateX( -90deg )
+  -moz-transform translate3d( 0px, 105%, 0px ) rotateX( -90deg )
+  -ms-transform translate3d( 0px, 105%, 0px ) rotateX( -90deg )
+  transform translate3d( 0px, 105%, 0px ) rotateX( -90deg )

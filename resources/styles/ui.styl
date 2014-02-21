@@ -1,0 +1,231 @@
+@import 'nib'
+
+*
+  box-sizing                  border-box
+  margin                      0
+  padding                     0
+
+h1,h2,h3,h4,h5
+  text-rendering              optimizelegibility
+
+h2
+  font-size                   2.5em
+  text-transform              capitalize
+
+html, body
+  margin                      0
+  padding                     0
+  font-family                 'Karla', sans-serif
+  overflow                    hidden
+  color                       #222
+  height                      100%
+
+input
+  font-family                 'Karla', sans-serif
+  font-size                   1em
+
+a
+  color                       #222
+
+.container
+  display                     -webkit-flex
+  -webkit-flex-direction      row
+  width                       100%
+  height                      100%
+
+  .sidebar
+    order                     1
+    min-width                 13em
+    max-width                 13em
+    /*width                     12px*/
+    padding-top               1.2em
+    overflow-x                hidden
+    overflow-y                scroll
+    min-height                0px
+
+    li
+      list-style-type         none
+      padding-left            22px
+      line-height             1.5em
+      font-size               1em
+      white-space             nowrap
+
+      span.count
+        float                 right
+        margin-right          15px
+        background-color      rgb(240, 240, 240)
+        padding               0px 4px 0px 4px
+        border-radius         28px     text-transform          capitalize
+
+    li:hover
+      font-weight             bold
+
+    li.active, li.newmessage
+      font-weight             bold
+
+    .joinchatmenu
+      margin-bottom           1.2em
+
+      li
+        border-left           12px solid
+        padding-left          9px
+
+
+      li.bright.active a
+        color                 #fff
+
+      li:not(.active)
+        background-color      #fff !important
+
+
+    .addchannel
+      span
+        display               inline
+      input
+        text-transform        capitalize
+        border                0
+        display               none
+        outline               none
+        background            none
+      form:before
+        content "+"
+        margin                0 2px 0 -14px
+        font-weight           bold
+      form:hover > input
+        display               inline
+      form:hover > span
+        display               none
+    .addchannel:hover
+      background        none
+
+  .chat
+    background-color          #16a085
+    order                     2
+    flex                      1 1 auto
+    overflow-y                auto
+    overflow-x                hidden
+    min-height                100%
+
+    h2 span
+      position                absolute
+      font-size               0.5em
+      opacity                 0
+      margin-left             -3em
+      top                     1.4em
+
+      a
+        text-decoration       none
+        margin-left           15px
+
+    h2:hover > span
+      opacity                 1
+      margin-left             0.4em
+
+    section
+      position                relative
+      height                  100vh
+      overflow                hidden
+      padding                 1em 1.5em 1em 1.5em
+
+      .chatcontainer
+        position              absolute
+        height                auto
+        bottom                5em
+        top                   4em
+        padding               0 30px 0 0
+        overflow              scroll
+        width                 100%
+
+
+  .chatinput
+    form
+      display                 -webkit-flex
+      position                fixed
+      bottom                  2em
+      left                    14.5em
+      right                   5em
+
+      div.bright
+        color                 #fff
+
+      .name
+        min-width             8em
+        padding-top           0.8em
+
+      input[type=text]
+        flex                  1 1 auto
+        max-width             40em
+        background            #fff
+        border                0px solid
+        padding               0.8em
+        color                 #222
+        outline               none
+
+      input[type=submit]
+        display               none
+
+  .catalogue
+    min-width                 30px
+    max-width                 30px
+    overflow-y                scroll
+    overflow-x                hidden
+    order                     3
+
+    h2
+      white-space             nowrap
+      padding                 0.4em
+      color                   #fff
+
+    .releases
+      width                   450px
+      overflow                hidden
+      margin                  0px
+
+      .release
+        margin                -4px
+        width                 200px
+        height                200px
+        overflow              hidden
+        display               inline-block
+
+        img
+          width               200px
+
+  .catalogue:hover
+    min-width                 470px
+    max-width                 470px
+
+    h2
+      color                   #222
+
+    .release
+      margin                  0 0 1.3em 1.3em
+
+  .catalogue:hover ~ .chat .sidebar
+    background-color          black
+    min-width                 1em !important
+    max-width                 1em !important
+
+  .catalogue:hover ~ .chatinput form
+    left                      35px
+    right                     500px
+
+  .catalogue:hover ~ .sidebar
+    min-width                 12px
+    max-width                 12px
+
+  .catalogue:hover ~ .musicplayer
+    right                     500px
+
+  .sidebar:hover
+    min-width                 14em
+    max-width                 14em
+
+  .sidebar:hover ~ .chatinput form
+    left                      15.5em
+
+  .catalogue, .sidebar, .chatinput form, .release, h2, span, .musicplayer
+    -webkit-transition        all 0.3s ease-in-out
+    -moz-transition           all 0.3s ease-in-out
+    -o-transition             all 0.3s ease-in-out
+    transition                all 0.3s ease-in-out
