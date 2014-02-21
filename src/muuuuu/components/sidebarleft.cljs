@@ -37,7 +37,7 @@
 
 (defn newChannel
   "Handles form submit"
-  [e owner app]
+  [e app owner]
   (let [[channelname channel-node] (value-from-node owner "channelname")]
     (when channelname
       ;(prn channelname))
@@ -45,28 +45,28 @@
       (clear-nodes! channel-node))
     false))
 
-(defn joinedchannel [{:keys [title color]} app owner]
+(defn joinedchannel [data app owner]
+  (let [[title colors] [(first data) (:color (second data))]]
   (om/component
     (dom/li
       #js {:data-panel title
-           :className (if (false? (:bright color)) "bright")
-           :style  #js {:borderColor (str "#" (:hex color))
-                        :backgroundColor (str "#" (:hex color))}}
-      (dom/a nil title))))
+           :className (if (false? (:bright :color (second room))) "bright")
+           :style  #js {:borderColor (str "#" (:hex :color (second room)))
+                        :backgroundColor (str "#" (:color :hex (second room)))}}
+      (dom/a nil (first room))))))
 
-(defn popularchannels [{:keys [title color]} app owner]
+(defn popularchannels [app owner opts]
   (om/component
-    (dom/li
-      #js {:data-panel title
-           :className (if (false? (:bright color)) "bright")
-           :style  #js {:borderColor (str "#" (:hex color))
-                        :backgroundColor (str "#" (:hex color))}}
-      (dom/a nil title))))
+      (dom/li nil
+        (dom/a #js {:onClick #(addChannel % opts)}
+          (first app)
+          ;(dom/span #js {:className "count"} 3)
+        ))))
 
 (defn addchannelform [app owner]
   (om/component
     (dom/li #js {:className "addchannel"}
-      (dom/form  #js {:onSubmit #(newChannel % owner app)}
+      (dom/form  #js {:onSubmit #(newChannel % app owner)}
         (dom/span nil "Add new")
         (dom/input #js {:type "text" :placeholder "channel name" :ref "channelname"})))))
 
@@ -75,7 +75,7 @@
    (dom/div #js {:className "sidebar"}
       (dom/div #js {:className "channellist"}
          (apply dom/ul #js {:className "joinchatmenu"}
-                (om/build-all joinedchannel (:rooms app) {:key :id}))
+                (om/build-all joinedchannel (:joined (:rooms app)) {:key :id}))
          (apply dom/ul nil
                  (om/build addchannelform app)
-                 (om/build-all popularchannels (:rooms app) {:key :id}))))))
+                 (om/build-all popularchannels (:popular (:rooms app)) {:key :id :opts app}))))))

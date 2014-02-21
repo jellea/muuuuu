@@ -44,13 +44,11 @@
     om/IDidMount
     (did-mount [_]
       (.panelSnap (js/$ ".chat") #js {:$menu (js/$ ".joinchatmenu")
-                                      :slideSpeed 120
+                                      :slideSpeed 200
                                       :menuSelector "li"})
 
       (.on (js/$ ".chat") "panelsnap:start" (fn [self, target]
-        ;; - iterate through excisting rooms and set inviewport to false if
-        ;; title doesnt match
-        ;; - push list
+        ;; - iterate through excisting rooms and set inviewport
 
         ;(om/transact! app [:rooms]
           ;(fn [rooms]
@@ -65,4 +63,4 @@
     om/IRender
     (render [_]
       (apply dom/div #js {:className "chat"}
-        (om/build-all room (:rooms app) {:key :id})))))
+        (om/build-all room (:joined (:rooms app)) {:key :id})))))

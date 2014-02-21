@@ -41,7 +41,7 @@
         (dom/form #js {:onSubmit #(handle-submit % owner)}
           (dom/div #js {:className (str "name"
             (if (:bright (:color (first
-               (filter (fn [r] (= (:inviewport r) true)) (:rooms app)))) true) "" " bright"))}
+               (filter (fn [r] (= (:inviewport r) true)) (:joined (:rooms app))))) true) "" " bright"))}
             (:yourname app))
           (dom/input #js {:className "yourmessage" :type "text" :ref "yourmessage" :placeholder "Your Message"})
           (dom/input #js {:type "submit" :value "Send!"})))))

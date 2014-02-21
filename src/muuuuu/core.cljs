@@ -23,6 +23,7 @@
     om/IDidMount
     (did-mount [_]
       (muuuuu.components.sidebarleft.addChannel "Techno" app)
+      (muuuuu.components.sidebarleft.addChannel "Metal" app)
     )
     om/IRender
     ; if inviewport give class 'selected'
