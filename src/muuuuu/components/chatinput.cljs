@@ -36,6 +36,7 @@
     false))
 
 (defn init [app owner]
+  (if (> (count (:joined (:rooms app))) 0)
   (om/component
       (dom/div #js {:className "chatinput"}
         (dom/form #js {:onSubmit #(handle-submit % owner)}
@@ -44,4 +45,6 @@
                (filter (fn [r] (= (:inviewport r) true)) (:joined (:rooms app))))) true) "" " bright"))}
             (:yourname app))
           (dom/input #js {:className "yourmessage" :type "text" :ref "yourmessage" :placeholder "Your Message"})
-          (dom/input #js {:type "submit" :value "Send!"})))))
+          (dom/input #js {:type "submit" :value "Send!"}))))
+  (om/component
+      (dom/div nil nil))))

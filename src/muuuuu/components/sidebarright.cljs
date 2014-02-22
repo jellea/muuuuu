@@ -18,5 +18,7 @@
   (om/component
     (dom/div #js {:className "catalogue"}
       (dom/h2 nil "Your Library")
-      (apply dom/div #js {:className "releases"}
-        (om/build-all release releases {:key :id})))))
+      (dom/div #js {:className "releases"}
+        (if (= (count releases 0))
+          (dom/p nil "It's empty, try dragging some mp3 files from your computer on this window.")
+          (om/build-all release releases {:key :id}))))))

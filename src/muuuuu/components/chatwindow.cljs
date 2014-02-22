@@ -58,9 +58,13 @@
                   ;(merge a {:inviewport false})))
               ;rooms)
         ;))
-      ))
+      ;))
+
     )
     om/IRender
     (render [_]
+      (if (= (count (:joined (:rooms app))) 0)
+        (dom/div #js {:className "intro"} "Hi, here's how to get started."))
       (apply dom/div #js {:className "chat"}
-        (om/build-all room (:joined (:rooms app)) {:key :id})))))
+        (om/build-all room (:joined (:rooms app)) {:key :id}))
+    )))
