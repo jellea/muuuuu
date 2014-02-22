@@ -18,8 +18,18 @@
 
 (def app-state
   (atom {:yourname "your name"
-         :rooms {:joined []
-                 :popular {"Pop" {:users 15 :id (guid)}, "RnB" {:users 26 :id (guid)}}}
+         :rooms {"Pop" {:users 15 :id (guid)}
+                 "Metal" {:users 26 :id (guid)}
+                 "Justin Bieber" {:users 2006 :id (guid)}
+                 "Funk" {:users 26 :id (guid)}
+                 "Jazz" {:users 26 :id (guid)}
+                 "Electro" {:users 26 :id (guid)}
+                 "Hardcore" {:users 26 :id (guid)}
+                 "Classic" {:users 26 :id (guid)}
+                 "Rock" {:users 26 :id (guid)}
+                 "Oldies" {:users 26 :id (guid)}
+                 "Experimental" {:users 26 :id (guid)}
+                 "RnB" {:users 26 :id (guid)}}
          :releases [
                     ;{:img "http://yaj0kz2x.zvq.me/197358b7bdf9735260715f06b79d0fc0c0c29612089e08249fe8d5cfc6e29ed8.300x300.jpg" :id (guid)}
            ;{:img "http://b9hyta0l.zvq.me/3be24a8a8e35024d8d374ad651b56b38e57a3354b403ddb9a996d94d8c9d5a9f.300x300.jpg" :id (guid)}

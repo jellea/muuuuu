@@ -17,29 +17,32 @@
   (om/component
     (dom/div nil "messages")))
 
-(defn room [{:keys [id title color inviewport] :as c} owner opts]
-  (reify
-    om/IWillMount
-    (will-mount [_])
-    om/IDidMount
-    (did-mount [_]
-      ; jump to chatroom on mount
-      (.panelSnap (js/$ ".chat") "snapToPanel"
-                  (js/$ (str "[data-panel=" title "]"))
+(defn room [data owner opts]
+  (let [[title color]
+        [(first data) (:color (second data))]]
+    (reify
+      om/IWillMount
+      (will-mount [_])
+      om/IDidMount
+      (did-mount [_]
+        ; jump to chatroom on mount
+        (.panelSnap (js/$ ".chat") "snapToPanel"
+                    (js/$ (str "[data-panel=" title "]"))
+        )
       )
-    )
-    om/IRender
-    ; if inviewport give class 'selected'
-    (render [_]
-      (dom/section
-        #js {:data-panel title
-             :className (str "chatroom" (if (false? (:bright color)) " bright"))
-             :style  #js {:backgroundColor (str "#" (:hex color))}}
-            (dom/h2 nil title)
-            (dom/div #js {:className "div.chatcontainer"}
-              (om/build messages c {:opts {:room title}}))))))
+      om/IRender
+      ; if inviewport give class 'selected'
+      (render [_]
+        (dom/section
+          #js {:data-panel title
+               :className (str "chatroom"
+                            (if (false? (:bright color)) " bright"))
+               :style  #js {:backgroundColor (str "#" (:hex color))}}
+              (dom/h2 nil title)
+              (dom/div #js {:className "div.chatcontainer"}
+                (om/build messages data {:opts {:room (first data)}})))))))
 
-(defn init [app owner]
+(defn init [{:keys [rooms] :as app} owner]
   (reify
     om/IDidMount
     (did-mount [_]
@@ -59,7 +62,7 @@
         #js {:type "keydown" :propagate false :target js/document}
       )
 
-              ;(.on (js/$ ".chat") "panelsnap:start" (fn [self, target]
+        ;(.on (js/$ ".chat") "panelsnap:start" (fn [self, target]
                                               ;(prn "hi")
         ;; - iterate through excisting rooms and set inviewport
 
@@ -76,8 +79,8 @@
     )
     om/IRender
     (render [_]
-      (if (= (count (:joined (:rooms app))) 0)
-        (dom/div #js {:className "intro"} "Hi, here's how to get started."))
+      ;(if (= (count (:joined (:rooms app))) 0)
+        ;(dom/div #js {:className "intro"} "Hi, here's how to get started."))
       (apply dom/div #js {:className "chat"}
-        (om/build-all room (:joined (:rooms app)) {:key :id}))
+        (om/build-all room (filter #(true? (:active (second %))) rooms) {:key :id}))
     )))

@@ -31,9 +31,9 @@
 
 (defn addChannel [title app]
   "Puts a new channel in the app-state"
-  (let [[room] [{:title title :color (get-next-color) :inviewport false :id (guid)}]]
-    (om/transact! app [:rooms :joined]
-      (fn [rooms] (conj rooms room)))))
+  (let [[room] [{:color (get-next-color) :active true :inviewport false :id (guid)}]]
+    (om/transact! app [:rooms]
+      (fn [rooms] (assoc rooms title room)))))
 
 (defn newChannel
   "Handles form submit"
@@ -44,23 +44,23 @@
       (clear-nodes! channel-node))
     false))
 
-(defn joinedchannel [{:keys [title color]} app owner]
+(defn joinedchannel [data owner]
+  (let [[title color][(first data)(:color (second data))]]
   (om/component
     (dom/li
       #js {:data-panel title
            :className (if (false? (:bright color)) "bright")
            :style  #js {:borderColor (str "#" (:hex color))
                         :backgroundColor (str "#" (:hex color))}}
-      (dom/a nil title))))
+      (dom/a nil title)))))
 
-(defn popularchannels [app owner opts]
-  (let [[title][(first app)]]
+(defn popularchannels [data owner opts]
   (om/component
       (dom/li nil
-        (dom/a #js {:onClick #(addChannel title opts)}
-          title
+        (dom/a #js {:onClick #(addChannel (first data) opts)}
+          (first data)
           ;(dom/span #js {:className "count"} 3)
-          )))))
+          ))))
 
 (defn addchannelform [app owner]
   (om/component
@@ -69,12 +69,13 @@
         (dom/span nil "Add new")
         (dom/input #js {:type "text" :placeholder "channel name" :ref "channelname"})))))
 
-(defn init [app owner]
+
+(defn init [{:keys [rooms] :as app} owner]
   (om/component
    (dom/div #js {:className "sidebar"}
       (dom/div #js {:className "channellist"}
          (apply dom/ul #js {:className "joinchatmenu"}
-                (om/build-all joinedchannel (:joined (:rooms app)) {:key :id}))
+                (om/build-all joinedchannel (filter #(true? (:active (second %))) rooms) {:key :id}))
          (apply dom/ul nil
                  (om/build addchannelform app)
-                 (om/build-all popularchannels (:popular (:rooms app)) {:key :id :opts app}))))))
+                 (om/build-all popularchannels (filter #(not (true? (:active (second %)))) rooms) {:key :id :opts app}))))))
