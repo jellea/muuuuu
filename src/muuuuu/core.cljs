@@ -10,7 +10,11 @@
 
 (enable-console-print!)
 
-
+(.add js/shortcut
+  "Up"
+  #(.panelSnap (js/$ ".chat") "snapTo" "next")
+  #js {:type "keydown" :propagate false :target js/document}
+  )
 
 (def app-state
   (atom {:yourname "your name"

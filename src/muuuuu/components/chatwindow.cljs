@@ -44,10 +44,23 @@
     om/IDidMount
     (did-mount [_]
       (.panelSnap (js/$ ".chat") #js {:$menu (js/$ ".joinchatmenu")
-                                      :slideSpeed 200
-                                      :menuSelector "li"})
+                              :slideSpeed 200
+                              :menuSelector "li"})
 
-      (.on (js/$ ".chat") "panelsnap:start" (fn [self, target]
+      (.add js/shortcut
+        "Up"
+        #(.panelSnap (js/$ ".chat") "snapTo" "prev")
+        #js {:type "keydown" :propagate false :target js/document}
+      )
+
+      (.add js/shortcut
+        "Down"
+        #(.panelSnap (js/$ ".chat") "snapTo" "next")
+        #js {:type "keydown" :propagate false :target js/document}
+      )
+
+              ;(.on (js/$ ".chat") "panelsnap:start" (fn [self, target]
+                                              ;(prn "hi")
         ;; - iterate through excisting rooms and set inviewport
 
         ;(om/transact! app [:rooms]
