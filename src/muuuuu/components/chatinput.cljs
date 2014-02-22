@@ -2,7 +2,7 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [clojure.string]
-            [muuuuu.utils :refer [guid]]))
+            [muuuuu.utils :refer [guid get-active-rooms]]))
 
 (enable-console-print!)
 
@@ -36,7 +36,7 @@
     false))
 
 (defn init [app owner]
-  (if (> (count (:joined (:rooms app))) 0)
+  (if (> (count (get-active-rooms (:rooms app))) 0)
   (om/component
       (dom/div #js {:className "chatinput"}
         (dom/form #js {:onSubmit #(handle-submit % owner)}

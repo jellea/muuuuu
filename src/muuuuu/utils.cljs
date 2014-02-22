@@ -30,3 +30,6 @@
   (swap! lastUsedColor #(if (< % 19) (inc %) 0))
   (nth colors @lastUsedColor)
 )
+
+(defn get-active-rooms [rooms]
+  (filter #(true? (:active (second %))) rooms))

@@ -2,7 +2,7 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [clojure.string]
-            [muuuuu.utils :refer [guid get-next-color]]))
+            [muuuuu.utils :refer [guid get-next-color get-active-rooms]]))
 
 (enable-console-print!)
 
@@ -29,9 +29,12 @@
 ;           input
 ;       li                      - channel
 
+
+
 (defn addChannel [title app]
   "Puts a new channel in the app-state"
-  (let [[room] [{:color (get-next-color) :active true :inviewport false :id (guid)}]]
+  (let [[room] [{:color (get-next-color) :active true
+                 :order (count (get-active-rooms (:rooms @app))) :inviewport false :id (guid)}]]
     (om/transact! app [:rooms]
       (fn [rooms] (assoc rooms title room)))))
 
@@ -75,7 +78,7 @@
    (dom/div #js {:className "sidebar"}
       (dom/div #js {:className "channellist"}
          (apply dom/ul #js {:className "joinchatmenu"}
-                (om/build-all joinedchannel (filter #(true? (:active (second %))) rooms) {:key :id}))
+                (om/build-all joinedchannel (sort-by #(:order(second %)) (get-active-rooms rooms)) {:key :id}))
          (apply dom/ul nil
                  (om/build addchannelform app)
                  (om/build-all popularchannels (filter #(not (true? (:active (second %)))) rooms) {:key :id :opts app}))))))

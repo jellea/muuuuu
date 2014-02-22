@@ -1,7 +1,8 @@
 (ns muuuuu.components.chatwindow
   (:require [goog.events :as events]
             [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true]))
+            [om.dom :as dom :include-macros true]
+            [muuuuu.utils :refer [get-active-rooms]]))
 
 (enable-console-print!)
 
@@ -82,5 +83,5 @@
       ;(if (= (count (:joined (:rooms app))) 0)
         ;(dom/div #js {:className "intro"} "Hi, here's how to get started."))
       (apply dom/div #js {:className "chat"}
-        (om/build-all room (filter #(true? (:active (second %))) rooms) {:key :id}))
+        (om/build-all room (sort-by #(:order(second %)) (get-active-rooms rooms)) {:key :id}))
     )))
