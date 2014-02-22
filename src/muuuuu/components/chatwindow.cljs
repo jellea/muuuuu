@@ -28,7 +28,7 @@
       (did-mount [_]
         ; jump to chatroom on mount
         (.panelSnap (js/$ ".chat") "snapToPanel"
-                    (js/$ (str "[data-panel=" title "]"))
+                    (js/$ (str "[data-panel=\"" title "\"]"))
         )
       )
       om/IRender

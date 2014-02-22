@@ -243,7 +243,7 @@ if ( typeof Object.create !== 'function' )
       var self = this;
 
       var panel = $(e.currentTarget).data('panel');
-      var $target = self.getPanel('[data-panel=' + panel + ']');
+      var $target = self.getPanel('[data-panel="' + panel + '"]');
 
       self.snapToPanel($target);
 
