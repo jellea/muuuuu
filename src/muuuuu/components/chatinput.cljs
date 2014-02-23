@@ -41,10 +41,11 @@
       (dom/div #js {:className "chatinput"}
         (dom/form #js {:onSubmit #(handle-submit % owner)}
           (dom/div #js {:className (str "name"
-            (if (:bright (:color (first
-               (filter (fn [r] (= (:inviewport (second r)) true)) (:rooms app)))) true) "" " bright"))}
+            (if (:bright (:color (second (first
+               (filter (fn [r] (= (:inviewport (second r)) true)) (:rooms app))
+                                   ))) true) "" " bright"))}
             (:yourname app))
-          (dom/input #js {:className "yourmessage" :type "text" :ref "yourmessage" :placeholder "Your Message"})
+          (dom/input #js {:id "yourmsg" :className "yourmessage" :type "text" :ref "yourmessage" :placeholder "Your Message"})
           (dom/input #js {:type "submit" :value "Send!"}))))
   (om/component
       (dom/div nil nil))))

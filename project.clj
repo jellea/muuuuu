@@ -12,11 +12,18 @@
 
   :source-paths ["src"]
 
-  :cljsbuild { 
+  :cljsbuild {
     :builds [{:id "dev"
               :source-paths ["src"]
               :compiler {
                 :output-to "out/muuuuu.js"
                 :output-dir "out"
                 :optimizations :none
+                :source-map true}}
+             {:id "release"
+              :source-paths ["src"]
+              :compiler {
+                :output-to "out2/muuuuu.js"
+                :output-dir "out2"
+                :optimizations :advanced
                 :source-map true}}]})

@@ -14,11 +14,11 @@
     (dom/div #js {:className "release"}
       (dom/img #js {:src img}))))
 
-(defn init [{:keys [releases]}]
+(defn init [releases]
   (om/component
     (dom/div #js {:className "catalogue"}
       (dom/h2 nil "Your Library")
       (dom/div #js {:className "releases"}
         (if (= (count releases 0))
-          (dom/p nil "It's empty, try dragging some mp3 files from your computer on this window.")
+          (dom/p nil "Empty, try dragging some mp3 files from your computer on this window.")
           (om/build-all release releases {:key :id}))))))

@@ -3,6 +3,7 @@
   (:import [goog.ui IdGenerator]))
 
 (defn value-from-node
+  "Gets value of a DOM input element"
   [component field]
   (let [n (om/get-node component field)
         v (-> n .-value clojure.string/trim)]
@@ -10,10 +11,12 @@
       [v n])))
 
 (defn clear-nodes!
+  "Clear specified DOM input elements"
   [& nodes]
   (doall (map #(set! (.-value %) "") nodes)))
 
 (defn guid []
+  "Gives unique id to be used by React"
   (.getNextUniqueId (.getInstance IdGenerator)))
 
 (def lastUsedColor (atom -1 {:validator #()}))
@@ -26,10 +29,10 @@
              {:hex "7f8c8d" :bright false} {:hex "1abc9c"} {:hex "2ecc71"}
              {:hex "3498db"} {:hex "9b59b6"}])
 
-(defn get-next-color "Return next color as a string" []
+(defn get-next-color "Returns next color as a string" []
   (swap! lastUsedColor #(if (< % 19) (inc %) 0))
   (nth colors @lastUsedColor)
 )
 
-(defn get-active-rooms [rooms]
+(defn get-active-rooms "Retursn a list of only active rooms" [rooms]
   (filter #(true? (:active (second %))) rooms))

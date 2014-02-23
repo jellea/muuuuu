@@ -14,6 +14,10 @@
 
 ; join leave events
 
+(defn message [message]
+  (om/component
+    (dom/div nil "message")))
+
 (defn messages [data owner {:keys [room] :as opts}]
   (om/component
     (dom/div nil "messages")))
@@ -22,17 +26,14 @@
   (let [[title color]
         [(first data) (:color (second data))]]
     (reify
-      om/IWillMount
-      (will-mount [_])
       om/IDidMount
       (did-mount [_]
         ; jump to chatroom on mount
         (.panelSnap (js/$ ".chat") "snapToPanel"
-                    (js/$ (str "[data-panel=\"" title "\"]"))
+          (js/$ (str "[data-panel=\"" title "\"]"))
         )
       )
       om/IRender
-      ; if inviewport give class 'selected'
       (render [_]
         (dom/section
           #js {:data-panel title
@@ -41,9 +42,19 @@
                :style  #js {:backgroundColor (str "#" (:hex color))}}
               (dom/h2 nil title)
               (dom/div #js {:className "div.chatcontainer"}
-                (om/build messages data {:opts {:room (first data)}})))))))
+                (om/build messages data {:opts {:room title}})))))))
 
-(defn init [{:keys [rooms] :as app} owner]
+(defn intro [app owner]
+  (om/component
+  (dom/div #js{:className "intro"}
+             (dom/h3 nil "Hi, here's how to get started.")
+             (dom/p #js{:className "joinchat"} "join chatrooms")
+             (dom/div nil
+               (dom/img #js {:src "resources/img/drag-example.png"})
+               (dom/p nil "share music from your computer"))
+             (dom/p #js{:className "listenmusic"} "listen music"))))
+
+(defn init [rooms owner]
   (reify
     om/IDidMount
     (did-mount [_]
@@ -63,25 +74,30 @@
         #js {:type "keydown" :propagate false :target js/document}
       )
 
-        ;(.on (js/$ ".chat") "panelsnap:start" (fn [self, target]
-                                              ;(prn "hi")
-        ;; - iterate through excisting rooms and set inviewport
+      (.on (js/$ ".chat") "panelsnap:start" (fn [self target]
+        ;set focus on chat input after scroll
+        (.focus (. js/document (getElementById "yourmsg")))
 
-        ;(om/transact! app [:rooms]
-          ;(fn [rooms]
-            ;(map
-              ;(fn [a] (if (= (:title a) (.attr target "data-panel"))
-                  ;(merge a {:inviewport true})
-                  ;(merge a {:inviewport false})))
-              ;rooms)
-        ;))
-      ;))
-
+        ; Warning dirty hacking ahead!
+        (om/transact! rooms
+          (fn [rooms]
+            ; flatten the lists to a big hash map
+            (apply hash-map (flatten
+              ; iterate and make lists like: (name {:viewport true})
+              (map (fn [r]
+                (list (first r) (merge (second r) {:inviewport
+                  (if (= (first r) (.attr target "data-panel")) true false)
+              })))
+            rooms)))))
+      ))
     )
     om/IRender
     (render [_]
-      ;(if (= (count (:joined (:rooms app))) 0)
-        ;(dom/div #js {:className "intro"} "Hi, here's how to get started."))
       (apply dom/div #js {:className "chat"}
-        (om/build-all room (sort-by #(:order(second %)) (get-active-rooms rooms)) {:key :id}))
-    )))
+        (if (= (count (get-active-rooms rooms)) 0)
+          (om/build intro nil)
+          )
+        (om/build-all room
+          (sort-by #(:order(second %)) (get-active-rooms rooms))
+          {:key :id})))
+    ))
