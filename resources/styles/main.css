@@ -36,7 +36,7 @@ a{color:#333}
 .container{display:-webkit-flex;-webkit-flex-direction:row;width:100%;height:100%;}
 .container .sidebar{-webkit-box-ordinal-group:1;-moz-box-ordinal-group:1;-o-box-ordinal-group:1;-ms-box-ordinal-group:1;-webkit-order:1;order:1;min-width:13em;max-width:13em;padding-top:1.2em;overflow-x:hidden;overflow-y:scroll;min-height:0;}
 .container .sidebar li{list-style-type:none;padding-left:22px;line-height:1.5em;font-size:1em;white-space:nowrap;}
-.container .sidebar li span.count{float:right;margin-right:15px;background-color:#f0f0f0;padding:0 4px 0 4px;}
+.container .sidebar li span.count{opacity:0;float:right;margin-right:15px;background-color:#F5F5F5;padding:0 4px 0 4px;}
 .container .sidebar li:hover{font-weight:bold}
 .container .sidebar li.active,.container .sidebar li.newmessage{font-weight:bold}
 .container .sidebar .joinchatmenu{margin-bottom:1.2em;}
@@ -45,7 +45,7 @@ a{color:#333}
 .container .sidebar .joinchatmenu li:not(.active){background-color:#fff !important}
 .container .sidebar .addchannel span{display:inline}
 .container .sidebar .addchannel input{text-transform:capitalize;border:0;display:none;outline:none;background:none}
-.container .sidebar .addchannel form:before{content:"+";margin:0 2px 0 -20px;padding-right:8px}
+.container .sidebar .addchannel form:before{content:"+";margin:0 3px 0 -20px;padding-right:8px}
 .container .sidebar .addchannel form:hover > input{display:inline}
 .container .sidebar .addchannel form:hover > span{display:none}
 .container .sidebar .addchannel:hover{background:none}
@@ -66,7 +66,7 @@ a{color:#333}
 .container .catalogue .releases .release{margin:-4px;width:200px;height:200px;overflow:hidden;display:inline-block;}
 .container .catalogue .releases .release img{width:200px}
 .container .catalogue:hover{min-width:470px;max-width:470px;}
-.container .catalogue:hover h2{color:#333}
+.container .catalogue:hover h2,p{color:#333}
 .container .catalogue:hover .release{margin:0 0 1.3em 1.3em}
 .container .catalogue:hover ~ .chat .sidebar{background-color:#000;min-width:1em !important;max-width:1em !important}
 .container .catalogue:hover ~ .chatinput form{left:35px;right:500px}
@@ -76,7 +76,73 @@ a{color:#333}
 .container .sidebar:hover ~ .chatinput form{left:15.5em}
 .container .catalogue,.container .sidebar,.container .chatinput form,.container .release,.container h2,.container span,.container .musicplayer{-webkit-transition:all .3s ease-in-out;-moz-transition:all .3s ease-in-out;-o-transition:all .3s ease-in-out;-webkit-transition:all .3s ease-in-out;-moz-transition:all .3s ease-in-out;-o-transition:all .3s ease-in-out;-ms-transition:all .3s ease-in-out;transition:all .3s ease-in-out}
 
-#content{
-  overflow: hidden;
+
+
+#content {
   height: 100%;
+}
+
+li {
+  cursor: pointer;
+}
+
+.container .intro{background-color:#16a085;-webkit-box-ordinal-group:2;-moz-box-ordinal-group:2;-o-box-ordinal-group:2;-ms-box-ordinal-group:2;-webkit-order:2;order:2;-webkit-box-flex:1;-moz-box-flex:1;-o-box-flex:1;-ms-box-flex:1;box-flex:1;-webkit-flex:1 1 auto;flex:1 1 auto;overflow-y:auto;overflow-x:hidden;min-height:100%;}
+
+.container .sidebar:hover span.count {
+  opacity: 1;
+}
+
+.container .sidebar span.count {
+  font-size: 0.5em;
+  margin: 4px 22px 0;
+  line-height: 1.8em;
+}
+
+.container .sidebar .popularchatmenu li:hover {
+  background-color: #F0F0F0;
+}
+
+.intro h3 {
+  padding: 3em 0 3em 3em;
+  font-size: 36px;
+  font-weight: normal;
+}
+
+.intro h3, .intro p {
+  color: #fff;
+}
+
+.intro .listenmusic{ text-align:right;}
+
+.intro .joinchat:before {
+  content: "------------------------------------------------------";
+  margin: 0 10px 0 -2px;
+  letter-spacing: -4px;
+  padding-right: 8px
+}
+
+.intro .listenmusic:after {
+  content:"---------------------------------------------------------------";
+  margin: 0 -7px 0 12px;
+  letter-spacing: -4px;
+  padding-right: 8px
+}
+
+.intro div {
+  display: block;
+  text-align: center;
+  margin: 20px 0 30px 0;
+}
+
+.intro div p {
+  margin: 2em 0 0 -65px;
+}
+
+.intro div img {
+  height:206px;
+}
+
+.releases p {
+  color: #fff;
+  padding: 1em;
 }

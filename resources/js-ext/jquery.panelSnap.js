@@ -295,7 +295,7 @@ if ( typeof Object.create !== 'function' )
       if(self.options.$menu !== false)
       {
         $(self.options.menuSelector + '.active', self.options.$menu).removeClass('active');
-        var itemSelector = self.options.menuSelector + '[data-panel=' + $target.data('panel') + ']';
+        var itemSelector = self.options.menuSelector + '[data-panel="' + $target.data('panel') + '"]';
         var $activeItem = $(itemSelector, self.options.$menu);
         $activeItem.addClass('active');
       }
