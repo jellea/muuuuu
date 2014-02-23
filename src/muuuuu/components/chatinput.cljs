@@ -2,6 +2,7 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [clojure.string]
+            [sablono.core :as html :refer-macros [html]]
             [muuuuu.utils :refer [guid get-active-rooms]]))
 
 (enable-console-print!)
@@ -29,23 +30,31 @@
         ;(prn (get-in res [:body :message])))))
 
 (defn handle-submit
-  [e owner]
+  [e app owner]
   (let [[text text-node] (value-from-node owner "yourmessage")]
     (when text
+      ;(om/transact! app
+      ;(fn [rooms] (assoc rooms test {:test true})))
+      ;(om/transact! app
+        ;fn [rooms] (assoc :rooms {:sender "you" :content text})
+      ;)
+      (prn @app)
       (clear-nodes! text-node))
     false))
 
 (defn init [app owner]
   (if (> (count (get-active-rooms (:rooms app))) 0)
   (om/component
-      (dom/div #js {:className "chatinput"}
-        (dom/form #js {:onSubmit #(handle-submit % owner)}
-          (dom/div #js {:className (str "name"
-            (if (:bright (:color (second (first
-               (filter (fn [r] (= (:inviewport (second r)) true)) (:rooms app))
+    (html [:div.chatinput
+            [:form {:onSubmit #(handle-submit % app owner)}
+              [:div {:className
+                  (str "name" (if (:bright (:color (second (first
+                  (filter (fn [r] (= (:inviewport (second r)) true)) (:rooms app))
                                    ))) true) "" " bright"))}
-            (:yourname app))
-          (dom/input #js {:id "yourmsg" :className "yourmessage" :type "text" :ref "yourmessage" :placeholder "Your Message"})
-          (dom/input #js {:type "submit" :value "Send!"}))))
+                (:yourname app)]
+              [:input#yourmsg.yourmessage {:type "text" :ref "yourmessage"
+                                         :placeholder "Your Message"}]
+              [:input {:type "submit" :value "Send!"}]
+          ]]))
   (om/component
-      (dom/div nil nil))))
+    (html [:div ""]))))

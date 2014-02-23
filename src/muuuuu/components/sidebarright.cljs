@@ -1,6 +1,7 @@
 (ns muuuuu.components.sidebarright
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
+            [sablono.core :as html :refer-macros [html]]
             ))
 
 ; Structure (element.classname - componentname)
@@ -11,14 +12,12 @@
 
 (defn release [{:keys [img id]} app owner]
   (om/component
-    (dom/div #js {:className "release"}
-      (dom/img #js {:src img}))))
+    (html [:div.release
+            [:img {:src img}]])))
 
-(defn init [releases]
+(defn init [releases owner]
   (om/component
-    (dom/div #js {:className "catalogue"}
-      (dom/h2 nil "Your Library")
-      (dom/div #js {:className "releases"}
-        (if (= (count releases 0))
-          (dom/p nil "Empty, try dragging some mp3 files from your computer on this window.")
-          (om/build-all release releases {:key :id}))))))
+    (html [:div.catalogue
+            [:h2 "Your Library"]
+            [:div.releases
+              (om/build-all release releases {:key :id})]])))

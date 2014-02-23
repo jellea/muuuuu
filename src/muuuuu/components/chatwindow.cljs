@@ -3,6 +3,7 @@
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [muuuuu.events]
+            [sablono.core :as html :refer-macros [html]]
             [muuuuu.utils :refer [get-active-rooms]]))
 
 (enable-console-print!)
@@ -15,17 +16,18 @@
 
 ; join leave events
 
-(defn message [message]
+(defn message [{:keys [sender content] :as msg} owner {:keys [room] :as opts}]
+  (prn msg)
   (om/component
-    (dom/div nil "message")))
-
-(defn messages [data owner {:keys [room] :as opts}]
-  (om/component
-    (dom/div nil "messages")))
+    (html [:div.message
+            [:div.sender
+              [:a sender]]
+            [:div.content content]
+      ])))
 
 (defn room [data owner opts]
-  (let [[title color]
-        [(first data) (:color (second data))]]
+  (let [[title color msgs]
+        [(first data) (:color (second data)) (:msgs (second data))]]
     (reify
       om/IDidMount
       (did-mount [_]
@@ -36,24 +38,23 @@
       )
       om/IRender
       (render [_]
-        (dom/section
-          #js {:data-panel title
-               :className (str "chatroom"
-                            (if (false? (:bright color)) " bright"))
-               :style  #js {:backgroundColor (str "#" (:hex color))}}
-              (dom/h2 nil title)
-              (dom/div #js {:className "div.chatcontainer"}
-                (om/build messages data {:opts {:room title}})))))))
+        (html [:section.chatroom {:data-panel title
+               :class (if (false? (:bright color)) "bright")
+               :style #js {:backgroundColor (str "#" (:hex color))}}
+                [:h2 title]
+                [:div.chatcontainer
+                  (om/build message msgs {:opts {:room title} :key :id})
+              ]])))))
 
 (defn intro [app owner]
   (om/component
-  (dom/div #js{:className "intro"}
-             (dom/h3 nil "Hi, here's how to get started.")
-             (dom/p #js{:className "joinchat"} "join chatrooms")
-             (dom/div nil
-               (dom/img #js {:src "resources/img/drag-example.png"})
-               (dom/p nil "share music from your computer"))
-             (dom/p #js{:className "listenmusic"} "listen music"))))
+  (html [:div.intro
+             [:h3 "Hi, here's how to get started."]
+             [:p.joinchat "join chatrooms"]
+             [:div
+               [:img {:src "resources/img/drag-example.png"}]
+               [:p "share music from your computer"]]
+             [:p.listenmusic "listen music"]])))
 
 (defn init [rooms owner]
   (reify
@@ -81,11 +82,11 @@
     )
     om/IRender
     (render [_]
-      (apply dom/div #js {:className "chat"}
-        (if (= (count (get-active-rooms rooms)) 0)
-          (om/build intro nil)
-          )
-        (om/build-all room
-          (sort-by #(:order(second %)) (get-active-rooms rooms))
-          {:key :id})))
-    ))
+      (html [:div.chat
+              (if (= (count (get-active-rooms rooms)) 0)
+                (om/build intro nil)
+                )
+              (om/build-all room
+                (sort-by #(:order(second %)) (get-active-rooms rooms))
+                {:key :id})
+            ]))))

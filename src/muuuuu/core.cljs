@@ -37,13 +37,10 @@
 
 (defn container [app owner]
   (reify
-  om/IWillMount
+    om/IWillMount
     (will-mount [_])
     om/IDidMount
-    (did-mount [_]
-      ;(muuuuu.components.sidebarleft.addChannel "Techno" app)
-      ;(muuuuu.components.sidebarleft.addChannel "Metal" app)
-    )
+    (did-mount [_])
     om/IRender
     ; if inviewport give class 'selected'
     (render [_]
