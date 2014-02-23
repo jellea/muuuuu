@@ -2,6 +2,7 @@
   (:require [goog.events :as events]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
+            [muuuuu.events]
             [muuuuu.utils :refer [get-active-rooms]]))
 
 (enable-console-print!)
@@ -58,21 +59,8 @@
   (reify
     om/IDidMount
     (did-mount [_]
-      (.panelSnap (js/$ ".chat") #js {:$menu (js/$ ".joinchatmenu")
-                              :slideSpeed 200
-                              :menuSelector "li"})
-
-      (.add js/shortcut
-        "Up"
-        #(.panelSnap (js/$ ".chat") "snapTo" "prev")
-        #js {:type "keydown" :propagate false :target js/document}
-      )
-
-      (.add js/shortcut
-        "Down"
-        #(.panelSnap (js/$ ".chat") "snapTo" "next")
-        #js {:type "keydown" :propagate false :target js/document}
-      )
+      (muuuuu.events.init-panelsnap)
+      (muuuuu.events.up-and-down-keys)
 
       (.on (js/$ ".chat") "panelsnap:start" (fn [self target]
         ;set focus on chat input after scroll

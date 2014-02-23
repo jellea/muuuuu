@@ -72,7 +72,6 @@
         (dom/span nil "Create new room")
         (dom/input #js {:type "text" :placeholder "Create new room" :ref "channelname"})))))
 
-
 (defn init [rooms owner]
   (om/component
    (dom/div #js {:className "sidebar"}
