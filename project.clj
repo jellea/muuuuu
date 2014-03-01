@@ -20,7 +20,8 @@
                 :output-to "out/muuuuu.js"
                 :output-dir "out"
                 :optimizations :none
-                :source-map true}}
+                :source-map true }
+              :notify-command ["growlnotify" "-n" "ClojureScript compiler" "-m"]}
              {:id "release"
               :source-paths ["src"]
               :compiler {
