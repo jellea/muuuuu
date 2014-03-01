@@ -1,4 +1,4 @@
-(ns muuuuu.components.sidebarright
+(ns muuuuu.components.catalogue
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [sablono.core :as html :refer-macros [html]]
@@ -20,5 +20,6 @@
     (html [:aside.catalogue
             [:h2 "Your Library"]
             [:div.releases
+              [:p "most listened"]
               (om/build-all release releases {:key :id})
             ]])))

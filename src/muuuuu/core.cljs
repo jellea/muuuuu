@@ -3,7 +3,7 @@
             [om.dom :as dom :include-macros true]
             [muuuuu.components.chatwindow]
             [muuuuu.components.room-management]
-            [muuuuu.components.sidebarright]
+            [muuuuu.components.catalogue]
             [muuuuu.components.chatinput]
             [muuuuu.components.musicplayer]
             [muuuuu.utils :refer [guid get-next-color]]
@@ -35,7 +35,7 @@
     (render [_]
       (dom/div #js {:className "container"}
            (om/build muuuuu.components.chatwindow.init (:rooms app))
-           (om/build muuuuu.components.sidebarright.init (:releases app))
+           (om/build muuuuu.components.catalogue.init (:releases app))
            (om/build muuuuu.components.room-management.init (:rooms app))
            (om/build muuuuu.components.chatinput.init app)
            (om/build muuuuu.components.musicplayer.init app)))))
