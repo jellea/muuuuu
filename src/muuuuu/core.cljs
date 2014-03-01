@@ -2,7 +2,7 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [muuuuu.components.chatwindow]
-            [muuuuu.components.room-management]
+            [muuuuu.components.roomlist]
             [muuuuu.components.catalogue]
             [muuuuu.components.chatinput]
             [muuuuu.components.musicplayer]
@@ -36,7 +36,7 @@
       (dom/div #js {:className "container"}
            (om/build muuuuu.components.chatwindow.init (:rooms app))
            (om/build muuuuu.components.catalogue.init (:releases app))
-           (om/build muuuuu.components.room-management.init (:rooms app))
+           (om/build muuuuu.components.roomlist.init (:rooms app))
            (om/build muuuuu.components.chatinput.init app)
            (om/build muuuuu.components.musicplayer.init app)))))
 

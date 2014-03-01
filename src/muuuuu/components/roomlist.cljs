@@ -1,4 +1,4 @@
-(ns muuuuu.components.room-management
+(ns muuuuu.components.roomlist
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [clojure.string]
