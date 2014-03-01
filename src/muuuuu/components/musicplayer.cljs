@@ -6,4 +6,7 @@
 
 (defn init [app owner]
   om/component
-    (html [:div.musicplayer ">"]))
+    (html [:div.musicplayer
+            [:div.text.hide "11. Pig Destroyer - Treblinka"]
+            [:div.heart.hide "<3"]
+            [:div.playbtn ">"]]))

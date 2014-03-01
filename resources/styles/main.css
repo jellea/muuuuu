@@ -100,12 +100,11 @@ input {
 .container .chatinput form,
 .container .release,
 .container h2,
-.container span,
 .container .musicplayer {
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
+}
+.container .sidebar {
+  padding-bottom: 4em;
 }
 .container .sidebar li {
   list-style-type: none;
@@ -123,6 +122,10 @@ input {
   font-size: 0.5em;
   margin: 4px 22px 0;
   line-height: 1.8em;
+  transition: opacity 0.6s ease-in;
+}
+.container .sidebar:hover span.count {
+  opacity: 1;
 }
 .container .sidebar li:not(.header) {
   cursor: pointer;
@@ -180,9 +183,6 @@ input {
 }
 .container .sidebar .addchannel:hover {
   background: none;
-}
-.container .sidebar:hover span.count {
-  opacity: 1;
 }
 .container .intro {
   background-color: #16a085;
@@ -353,64 +353,6 @@ input {
 .chat .bright .self .content {
   border: 1px solid #fff;
 }
-.roll-link {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-  -webkit-perspective: 600px;
-  -moz-perspective: 600px;
-  -ms-perspective: 600px;
-  perspective: 600px;
-  -webkit-perspective-origin: 50% 50%;
-  -moz-perspective-origin: 50% 50%;
-  -ms-perspective-origin: 50% 50%;
-  perspective-origin: 50% 50%;
-}
-.roll-link:hover {
-  text-decoration: none;
-}
-.roll-link span {
-  display: block;
-  position: relative;
-  padding: 0 2px;
-  -webkit-transition: all 400ms ease;
-  -moz-transition: all 400ms ease;
-  -ms-transition: all 400ms ease;
-  transition: all 400ms ease;
-  -webkit-transform-origin: 50% 0%;
-  -moz-transform-origin: 50% 0%;
-  -ms-transform-origin: 50% 0%;
-  transform-origin: 50% 0%;
-  -webkit-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  -ms-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-}
-.roll-link:hover span {
-  background: #e93a30;
-  -webkit-transform: translate3d(0px, 0px, -30px) rotateX(90deg);
-  -moz-transform: translate3d(0px, 0px, -30px) rotateX(90deg);
-  -ms-transform: translate3d(0px, 0px, -30px) rotateX(90deg);
-  transform: translate3d(0px, 0px, -30px) rotateX(90deg);
-}
-.roll-link span::after {
-  content: attr(data-title);
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  padding: 0 2px;
-  color: #fff;
-  background: #e93a30;
-  -webkit-transform-origin: 50% 0%;
-  -moz-transform-origin: 50% 0%;
-  -ms-transform-origin: 50% 0%;
-  transform-origin: 50% 0%;
-  -webkit-transform: translate3d(0px, 105%, 0px) rotateX(-90deg);
-  -moz-transform: translate3d(0px, 105%, 0px) rotateX(-90deg);
-  -ms-transform: translate3d(0px, 105%, 0px) rotateX(-90deg);
-  transform: translate3d(0px, 105%, 0px) rotateX(-90deg);
-}
 .chatinput form {
   display: -webkit-flex;
   position: fixed;
@@ -422,13 +364,14 @@ input {
   color: #fff;
 }
 .chatinput form .name {
+  transition: color 0.4s ease-in;
   min-width: 8em;
   padding-top: 0.8em;
 }
 .chatinput form input[type=text] {
   flex: 1 1 auto;
   max-width: 40em;
-  background: #fff;
+  background-color: rgba(255,255,255,0.9);
   border: 0px solid;
   padding: 0.8em;
   outline: none;
@@ -462,8 +405,31 @@ input {
 }
 .musicplayer {
   position: absolute;
+  height: 30px;
   top: 0;
   right: 4em;
-  background-color: #fff;
+  line-height: 1em;
+}
+.musicplayer > div {
+  display: inline-block;
   padding: 8px 11px 8px 11px;
+  background-color: #fff;
+}
+.musicplayer:hover .hide {
+  opacity: 1;
+  background-color: #fff;
+  display: inline-block;
+}
+.musicplayer .hide {
+  background-color: transparent;
+  transition: all 0.5s ease-out;
+  opacity: 0;
+}
+.musicplayer .text {
+  line-height: 1em;
+  font-size: 0.6em;
+}
+.musicplayer .playbtn {
+  font-weight: bold;
+  text-align: right;
 }
