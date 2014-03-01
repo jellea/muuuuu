@@ -11,9 +11,15 @@ h4,
 h5 {
   text-rendering: optimizelegibility;
 }
+h1 {
+  padding: 2em;
+}
 h2 {
   font-size: 2.5em;
   text-transform: capitalize;
+}
+a {
+  cursor: pointer;
 }
 html,
 body {
@@ -141,6 +147,13 @@ input {
   padding-left: 22px;
   padding-bottom: 1em;
 }
+.container .sidebar li.header a {
+  float: right;
+  font-weight: normal;
+  opacity: 1;
+  margin-right: 30px;
+  text-rendering: optimizelegibility;
+}
 .container .sidebar .joinchatmenu {
   margin-bottom: 1.2em;
 }
@@ -156,31 +169,6 @@ input {
 }
 .container .sidebar .popularchatmenu li:hover {
   background-color: #f0f0f0;
-}
-.container .sidebar .addchannel span {
-  display: inline;
-}
-.container .sidebar .addchannel input {
-  text-transform: capitalize;
-  border: 0;
-  display: none;
-  outline: none;
-  background: none;
-}
-.container .sidebar .addchannel form:before {
-  content: "+";
-  margin: 0 3px 0 -20px;
-  padding-right: 8px;
-  font-weight: bold;
-}
-.container .sidebar .addchannel form:hover > input {
-  display: inline;
-}
-.container .sidebar .addchannel form:hover > span {
-  display: none;
-}
-.container .sidebar .addchannel:hover {
-  background: none;
 }
 .container .intro {
   background-color: #16a085;

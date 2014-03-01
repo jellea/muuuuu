@@ -12,7 +12,7 @@
 (enable-console-print!)
 
 (def app-state
-  (atom {:yourname "your name"
+  (atom {:yourname (str "Guest" (rand-int 9999))
          :rooms muuuuu.utils.make-roomslist
          :releases [
                      {:img "http://yaj0kz2x.zvq.me/197358b7bdf9735260715f06b79d0fc0c0c29612089e08249fe8d5cfc6e29ed8.300x300.jpg" :id (guid)}

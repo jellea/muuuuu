@@ -31,7 +31,6 @@
 (defn room [data owner opts]
   (let [[title color msgs users]
         [(first data) (:color (second data)) (:msgs (second data)) (:users (second data))]]
-    (prn (second data))
     (reify
       om/IDidMount
       (did-mount [_]

@@ -39,6 +39,13 @@
       padding-left            22px
       padding-bottom          1em
 
+      a // only used in the case of the create new room '+' button
+        float                 right
+        font-weight           normal
+        opacity               1
+        margin-right          30px
+        text-rendering        optimizelegibility
+
     .joinchatmenu
       margin-bottom           1.2em
 
@@ -55,24 +62,3 @@
 
     .popularchatmenu li:hover
       background-color        #f0f0f0
-
-    .addchannel
-      span
-        display               inline
-      input
-        text-transform        capitalize
-        border                0
-        display               none
-        outline               none
-        background            none
-      form:before
-        content "+"
-        margin                0 3px 0 -20px
-        padding-right         8px
-        font-weight           bold
-      form:hover > input
-        display               inline
-      form:hover > span
-        display               none
-    .addchannel:hover
-      background              none

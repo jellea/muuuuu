@@ -83,7 +83,8 @@
             [:div.channellist
               (if (> (count (get-active-rooms rooms)) 0)
                 [:ul
-                  [:li.header "Active rooms"]])
+                  [:li.header "Active rooms" 
+                    [:a {:title "Create new room"} " +"]]])
               [:ul.joinchatmenu
                 (om/build-all joinedchannel
                     (sort-by #(:order (second %)) (get-active-rooms rooms))
