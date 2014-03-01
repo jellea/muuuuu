@@ -41,18 +41,20 @@
         )
       )
       om/IRender
-      (render [_]
+      (render [_]<D-§>
         (html [:section.chatroom {:data-panel title
                   :class (if (false? (:bright color)) "bright")
                   :style #js {:backgroundColor (str "#" (:hex color))}}
-                [:h2 title]
+                [:h2 title [:span.options [:a "delete"] [:a "notify"]]]
                 [:div.chatcontainer
-                  (om/build-all message msgs {:key :id :opts {:room title}})]
-                [:ul.userslist
-                  [:li.header "Users"
-                    [:span (count users)]]
-                  (om/build-all user users)]
-               ])))))
+                  [:div.messages
+                    (om/build-all message msgs {:key :id :opts {:room title}})]
+                  [:ul.userlist
+                    [:li.header "Users"
+                      [:span.count (str" (" (count users) ")")]]
+                    (om/build-all user users)]
+                 ]
+              ])))))
 
 (defn intro [app owner]
   (om/component

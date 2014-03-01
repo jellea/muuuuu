@@ -4,8 +4,6 @@
   padding: 0;
   color: #333;
 }
-p,
-li,
 h1,
 h2,
 h3,
@@ -234,20 +232,22 @@ input {
 .container .chat {
   background-color: #16a085;
 }
-.container .chat h2 span {
+.container .chat h2 .options {
   position: absolute;
-  font-size: 0.5em;
+  font-size: 0.4em;
   opacity: 0;
   margin-left: -3em;
-  top: 1.4em;
+  top: 1.8em;
+  text-transform: none;
+  transition: all 0.1s linear;
 }
-.container .chat h2 span a {
+.container .chat h2 .options a {
   text-decoration: none;
-  margin-left: 15px;
+  margin-left: 0.7em;
 }
-.container .chat h2:hover > span {
+.container .chat h2:hover > .options {
   opacity: 1;
-  margin-left: 0.4em;
+  margin-left: 0.3em;
 }
 .container .chat section {
   position: relative;
@@ -256,6 +256,7 @@ input {
   padding: 1em 1.5em 1em 1.5em;
 }
 .container .chat section .chatcontainer {
+  display: -webkit-flex;
   position: absolute;
   height: auto;
   bottom: 5em;
@@ -264,64 +265,32 @@ input {
   overflow: scroll;
   width: 100%;
 }
-.container .chat section .tip {
-  display: inline-block;
+.container .chat section .chatcontainer:hover > .userlist {
+  opacity: 1;
 }
-.container .chat section .tip /* This is any element that has a tooltip attached too it */ {
-  position: relative !important;
-  display: inline-block;
+.container .chat section .chatcontainer .messages {
+  min-width: 500px;
+  flex: 1 1 auto;
 }
-.container .chat section .tip > .tooltip /* Used to hide the tooltip */ {
-  display: none;
+.container .chat section .chatcontainer .userlist {
+  float: right;
+  opacity: 0;
+  margin-right: 5em;
+  transition: opacity 0.3s ease-in 0.3s;
 }
-.container .chat section .tip:hover > .tooltip /* This shows the tooltip once an element with the .tip class is hovered over */ {
-  display: block;
-}
-.container .chat section .tooltip /* The styling on the tooltip */ {
-  background: none repeat scroll 0 0 #fff;
-  color: #000;
-  left: 0px;
-  margin-top: 10px;
-  padding: 5px;
-  position: absolute;
-  text-align: center;
-  width: 200px;
-  z-index: 10;
-}
-.container .chat section .tooltip:before /* Creates the arrow for the tooltip */ {
-  border-color: transparent transparent #fff transparent;
-  border-style: solid;
-  border-width: 10px;
-  height: 0px;
-  width: 0px;
-  position: absolute;
-  top: -20px;
-  left: 10px;
-  display: block;
-  content: "\00a0";
-}
-.container .chat section .users {
-  width: auto;
-  max-height: 70vh;
-}
-.container .chat section .users ul {
-  height: 100%;
-  width: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  margin: 0;
-  padding: 10px 40px 0px 10px;
-}
-.container .chat section .users a {
-  color: #222;
-  margin: 0;
-}
-.container .chat section .users a li {
+.container .chat section .chatcontainer .userlist li {
   list-style-type: none;
-  margin-bottom: 10px;
-  text-align: left;
-  font-weight: normal;
-  font-size: 0.8em;
+  line-height: 1.7em;
+}
+.container .chat section .chatcontainer .userlist li.header {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.container .chat section .chatcontainer .userlist li:not(.header) {
+  cursor: pointer;
+}
+.container .chat section .chatcontainer .userlist li .count {
+  font-size: 0.6em;
 }
 .chat .message {
   font-size: 1em;
@@ -427,7 +396,6 @@ input {
 }
 .musicplayer .text {
   line-height: 1em;
-  font-size: 0.6em;
 }
 .musicplayer .playbtn {
   font-weight: bold;
