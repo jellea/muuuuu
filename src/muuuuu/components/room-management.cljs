@@ -3,7 +3,7 @@
             [om.dom :as dom :include-macros true]
             [clojure.string]
             [sablono.core :as html :refer-macros [html]]
-            [muuuuu.utils :refer [guid get-next-color get-active-rooms]]))
+            [muuuuu.utils :refer [guid usernames get-next-color get-active-rooms]]))
 
 (enable-console-print!)
 
@@ -34,8 +34,9 @@
   "Puts a new channel in the app-state"
   (let [[room] [{:color (get-next-color) :active true
                  :order (count (get-active-rooms @rooms))
-                 :inviewport false :id (guid)
-                 :msgs [{:sender "Sys", :content (str "You just joined " title), :id (guid)}]}]]
+                 :inviewport false :id (guid) :users usernames
+                 :msgs [{:sender "System", :msg-type "action" :content (str "You just joined " title), :id (guid)}{:sender "Jelle", :content (str "Hey, Ustina!"), :id (guid)}{:sender "You", :msg-type "self", :content (str "Hey, Jelle!"), :id (guid)}]}]]
+
     (om/transact! rooms
       (fn [rooms] (assoc rooms title room)))))
 
@@ -64,7 +65,7 @@
       (html [:li {:onClick #(addChannel (first data) opts)}
               [:a
                 (first data)
-                [:span.count (:users (second data))]
+                [:span.count (:usercount (second data))]
             ]])))
 
 (defn addchannelform [app owner]
@@ -78,16 +79,21 @@
 
 (defn init [rooms owner]
   (om/component
-    (html [:div.sidebar
+    (html [:aside.sidebar
             [:div.channellist
+              (if (> (count (get-active-rooms rooms)) 0)
+                [:ul
+                  [:li.header "Active rooms"]])
               [:ul.joinchatmenu
                 (om/build-all joinedchannel
                     (sort-by #(:order (second %)) (get-active-rooms rooms))
                     {:key :id})]
+              [:ul
+                [:li.header "Popular rooms"]]
               [:ul.popularchatmenu
-                (om/build addchannelform rooms)
+                ;(om/build addchannelform rooms)
                 (om/build-all popularchannel
-                    (sort-by #(:users (second %)) >
+                    (sort-by #(:usercount (second %)) >
                         (filter #(not (true? (:active (second %)))) rooms))
                     {:key :id :opts rooms})
           ]]])))

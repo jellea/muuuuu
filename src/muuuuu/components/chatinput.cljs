@@ -3,7 +3,7 @@
             [om.dom :as dom :include-macros true]
             [clojure.string]
             [sablono.core :as html :refer-macros [html]]
-            [muuuuu.utils :refer [guid get-active-rooms]]))
+            [muuuuu.utils :refer [guid get-active-rooms current-room]]))
 
 (enable-console-print!)
 
@@ -46,7 +46,7 @@
   (if (> (count (get-active-rooms (:rooms app))) 0)
   (om/component
     (html [:div.chatinput
-            [:form {:onSubmit #(handle-submit % app owner)}
+            [:form {:onSubmit #(send-message % app owner)}
               [:div {:className
                   (str "name" (if (:bright (:color (second (first
                   (filter (fn [r] (= (:inviewport (second r)) true)) (:rooms app))

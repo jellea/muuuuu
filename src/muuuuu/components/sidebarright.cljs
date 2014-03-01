@@ -17,7 +17,8 @@
 
 (defn init [releases owner]
   (om/component
-    (html [:div.catalogue
+    (html [:aside.catalogue
             [:h2 "Your Library"]
             [:div.releases
-              (om/build-all release releases {:key :id})]])))
+              (om/build-all release releases {:key :id})
+            ]])))

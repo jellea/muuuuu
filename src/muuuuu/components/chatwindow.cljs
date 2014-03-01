@@ -16,18 +16,22 @@
 
 ; join leave events
 
-(defn message [{:keys [sender content] :as msg} owner {:keys [room] :as opts}]
-  (prn msg)
+(defn message [{:keys [sender msg-type content] :as msg} owner {:keys [room] :as opts}]
   (om/component
-    (html [:div.message
+    (html [:div {:className (str "message " msg-type)}
             [:div.sender
               [:a sender]]
             [:div.content content]
-      ])))
+          ])))
+
+(defn user [user owner]
+  (om/component
+    (html [:li user])))
 
 (defn room [data owner opts]
-  (let [[title color msgs]
-        [(first data) (:color (second data)) (:msgs (second data))]]
+  (let [[title color msgs users]
+        [(first data) (:color (second data)) (:msgs (second data)) (:users (second data))]]
+    (prn (second data))
     (reify
       om/IDidMount
       (did-mount [_]
@@ -39,22 +43,26 @@
       om/IRender
       (render [_]
         (html [:section.chatroom {:data-panel title
-               :class (if (false? (:bright color)) "bright")
-               :style #js {:backgroundColor (str "#" (:hex color))}}
+                  :class (if (false? (:bright color)) "bright")
+                  :style #js {:backgroundColor (str "#" (:hex color))}}
                 [:h2 title]
                 [:div.chatcontainer
-                  (om/build message msgs {:opts {:room title} :key :id})
-              ]])))))
+                  (om/build-all message msgs {:key :id :opts {:room title}})]
+                [:ul.userslist
+                  [:li.header "Users"
+                    [:span (count users)]]
+                  (om/build-all user users)]
+               ])))))
 
 (defn intro [app owner]
   (om/component
   (html [:div.intro
-             [:h3 "Hi, here's how to get started."]
-             [:p.joinchat "join chatrooms"]
-             [:div
-               [:img {:src "resources/img/drag-example.png"}]
-               [:p "share music from your computer"]]
-             [:p.listenmusic "listen music"]])))
+          [:h3 "Hi, here's how to get started."]
+          [:p.joinchat "join some chatrooms"]
+          [:div
+            [:img {:src "resources/img/drag-example.png"}]
+            [:p "share music from your computer"]]
+          [:p.listenmusic "listen music"]])))
 
 (defn init [rooms owner]
   (reify

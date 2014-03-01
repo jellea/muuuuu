@@ -18,3 +18,7 @@
     #(.panelSnap (js/$ ".chat") "snapTo" "next")
     #js {:type "keydown" :propagate false :target js/document}
   ))
+
+;(.onclose js/window
+  ;(fn [e] (if (.confirm js/window "Wanna leave?" false)
+    ;(.preventdefault e))))
