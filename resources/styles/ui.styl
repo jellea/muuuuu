@@ -33,52 +33,6 @@ input
   width                       100%
   height                      100%
 
-  .intro
-    background-color #16a085
-    -webkit-box-ordinal-group 2
-    -webkit-order             2
-    -webkit-box-flex          1
-    box-flex                  1
-    -webkit-flex              1 1 auto
-    flex                      1 1 auto
-    overflow-y                auto
-    overflow-x                hidden
-    min-height                100%
-
-    h3
-      padding                 3em 0 3em 3em
-      font-size               36px
-      font-weight             normal
-
-    h3, p
-      color                   #fff
-
-    .listenmusic
-      text-align              right
-
-    .joinchat:before
-      content                 "------------------------------------------------------"
-      margin                  0 10px 0 -2px
-      letter-spacing          -4px
-      padding-right           8px
-
-    .listenmusic:after
-      content                 "---------------------------------------------------------------"
-      margin                  0 -7px 0 12px
-      letter-spacing          -4px
-      padding-right           8px
-
-    div
-      display                 block
-      text-align              center
-      margin                  20px 0 30px 0
-
-      p
-        margin                2em 0 0 -65px
-
-      img
-        height                206px
-
   .sidebar
     order                     1
     min-width                 13em
@@ -89,144 +43,12 @@ input
     overflow-y                scroll
     min-height                0px
 
-    li
-      list-style-type         none
-      padding-left            22px
-      line-height             1.5em
-      font-size               1em
-      white-space             nowrap
-
-      span.count
-        opacity               0
-        float                 right
-        background-color      rgb(240, 240, 240)
-        padding               0px 4px 0px 4px
-        border-radius         28px     text-transform          capitalize
-        font-size             0.5em
-        margin                4px 22px 0
-        line-height           1.8em
-
-    li:not(.header)
-      cursor                  pointer
-
-    li:hover
-      font-weight             bold
-
-    li.active, li.newmessage
-      font-weight             bold
-
-    li.header
-      font-weight             bold
-      border-left             0px none
-      padding-left            22px
-      padding-bottom          1em
-
-    .joinchatmenu
-      margin-bottom           1.2em
-
-      li
-        border-left           12px solid
-        padding-left          9px
-
-
-      li.bright.active a
-        color                 #fff
-
-      li:not(.active)
-        background-color      #fff !important
-
-    .popularchatmenu li:hover
-      background-color        #f0f0f0
-
-    .addchannel
-      span
-        display               inline
-      input
-        text-transform        capitalize
-        border                0
-        display               none
-        outline               none
-        background            none
-      form:before
-        content "+"
-        margin                0 3px 0 -20px
-        padding-right         8px
-        font-weight           bold
-      form:hover > input
-        display               inline
-      form:hover > span
-        display               none
-    .addchannel:hover
-      background        none
-
-  .sidebar:hover span.count
-    opacity                   1
-
-
   .chat
-    background-color          #16a085
     order                     2
     flex                      1 1 auto
     overflow-y                auto
     overflow-x                hidden
     min-height                100%
-
-    h2 span
-      position                absolute
-      font-size               0.5em
-      opacity                 0
-      margin-left             -3em
-      top                     1.4em
-
-      a
-        text-decoration       none
-        margin-left           15px
-
-    h2:hover > span
-      opacity                 1
-      margin-left             0.4em
-
-    section
-      position                relative
-      height                  100vh
-      overflow                hidden
-      padding                 1em 1.5em 1em 1.5em
-
-      .chatcontainer
-        position              absolute
-        height                auto
-        bottom                5em
-        top                   4em
-        padding               0 30px 0 0
-        overflow              scroll
-        width                 100%
-
-
-  .chatinput
-    form
-      display                 -webkit-flex
-      position                fixed
-      bottom                  2em
-      left                    14.5em
-      right                   5em
-
-      div.bright
-        color                 #fff
-
-      .name
-        min-width             8em
-        padding-top           0.8em
-
-      input[type=text]
-        flex                  1 1 auto
-        max-width             40em
-        background            #fff
-        border                0px solid
-        padding               0.8em
-        outline               none
-
-      input[type=submit]
-        display               none
 
   .catalogue
     min-width                 30px
@@ -235,29 +57,7 @@ input
     overflow-x                hidden
     order                     3
 
-    h2
-      white-space             nowrap
-      padding                 0.4em
-      color                   #fff
-
-    .releases
-      width                   450px
-      overflow                hidden
-      margin                  0px
-
-      p
-        color                 #fff
-        padding               1em
-
-      .release
-        margin                -4px
-        width                 200px
-        height                200px
-        overflow              hidden
-        display               inline-block
-
-        img
-          width               200px
+  // This is where the magic hovering happens
 
   .catalogue:hover
     min-width                 470px
@@ -268,6 +68,7 @@ input
 
     .release
       margin                  0 0 1.3em 1.3em
+
 
   .catalogue:hover ~ .chat .sidebar
     background-color          black
@@ -291,6 +92,8 @@ input
 
   .sidebar:hover ~ .chatinput form
     left                      15.5em
+
+  // animate the hovers
 
   .catalogue, .sidebar, .chatinput form, .release, h2, span, .musicplayer
     -webkit-transition        all 0.3s ease-in-out

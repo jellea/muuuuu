@@ -1,0 +1,74 @@
+.container
+  .sidebar
+    li
+      list-style-type         none
+      padding-left            22px
+      line-height             1.5em
+      font-size               1em
+      white-space             nowrap
+
+      span.count
+        opacity               0
+        float                 right
+        background-color      rgb(240, 240, 240)
+        padding               0px 4px 0px 4px
+        border-radius         28px     text-transform          capitalize
+        font-size             0.5em
+        margin                4px 22px 0
+        line-height           1.8em
+
+    li:not(.header)
+      cursor                  pointer
+
+    li:hover
+      font-weight             bold
+
+    li.active, li.newmessage
+      font-weight             bold
+
+    li.header
+      font-weight             bold
+      border-left             0px none
+      padding-left            22px
+      padding-bottom          1em
+
+    .joinchatmenu
+      margin-bottom           1.2em
+
+      li
+        border-left           12px solid
+        padding-left          9px
+
+
+      li.bright.active a
+        color                 #fff
+
+      li:not(.active)
+        background-color      #fff !important
+
+    .popularchatmenu li:hover
+      background-color        #f0f0f0
+
+    .addchannel
+      span
+        display               inline
+      input
+        text-transform        capitalize
+        border                0
+        display               none
+        outline               none
+        background            none
+      form:before
+        content "+"
+        margin                0 3px 0 -20px
+        padding-right         8px
+        font-weight           bold
+      form:hover > input
+        display               inline
+      form:hover > span
+        display               none
+    .addchannel:hover
+      background              none
+
+  .sidebar:hover span.count
+    opacity                   1

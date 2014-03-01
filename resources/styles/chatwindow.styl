@@ -1,60 +1,92 @@
 .container
   .chat
-    .tip
-      display inline-block
+    background-color          #16a085
 
-    .tip /* This is any element that has a tooltip attached too it */
-      position                relative !important
-      display                 inline-block
-
-    .tip > .tooltip /* Used to hide the tooltip */
-      display                 none
-
-    .tip:hover > .tooltip /* This shows the tooltip once an element with the .tip class is hovered over */
-      display                 block
-
-    .tooltip /* The styling on the tooltip */
-      background              none repeat scroll 0 0 #FFFFFF
-      color                   #000000
-      left                    0px
-      margin-top              10px
-      padding                 5px
+    h2 span
       position                absolute
-      text-align              center
-      width                   200px
-      z-index                 10
-
-    .tooltip:before  /* Creates the arrow for the tooltip */
-      border-color            transparent transparent #fff transparent
-      border-style            solid
-      border-width            10px
-      height                  0px
-      width                   0px
-      position                absolute
-      top                     -20px
-      left                    10px
-      display                 block
-      content                 "\00a0"
-
-    .users
-      width                   auto
-      max-height              70%vh
-
-      ul
-        height 100%
-        width 100%
-        overflow-y              scroll
-        overflow-x              hidden
-        margin                0
-        padding               10px 40px 0px 10px
+      font-size               0.5em
+      opacity                 0
+      margin-left             -3em
+      top                     1.4em
 
       a
-        color                 #222
-        margin                0
+        text-decoration       none
+        margin-left           15px
 
-        li
-          list-style-type     none
-          margin-bottom       10px
-          text-align          left
-          font-weight         normal
-          font-size           0.8em
+    h2:hover > span
+      opacity                 1
+      margin-left             0.4em
+
+    section
+      position                relative
+      height                  100vh
+      overflow                hidden
+      padding                 1em 1.5em 1em 1.5em
+
+      .chatcontainer
+        position              absolute
+        height                auto
+        bottom                5em
+        top                   4em
+        padding               0 30px 0 0
+        overflow              scroll
+        width                 100%
+
+      .tip
+        display inline-block
+
+      .tip /* This is any element that has a tooltip attached too it */
+        position                relative !important
+        display                 inline-block
+
+      .tip > .tooltip /* Used to hide the tooltip */
+        display                 none
+
+      .tip:hover > .tooltip /* This shows the tooltip once an element with the .tip class is hovered over */
+        display                 block
+
+      .tooltip /* The styling on the tooltip */
+        background              none repeat scroll 0 0 #FFFFFF
+        color                   #000000
+        left                    0px
+        margin-top              10px
+        padding                 5px
+        position                absolute
+        text-align              center
+        width                   200px
+        z-index                 10
+
+      .tooltip:before  /* Creates the arrow for the tooltip */
+        border-color            transparent transparent #fff transparent
+        border-style            solid
+        border-width            10px
+        height                  0px
+        width                   0px
+        position                absolute
+        top                     -20px
+        left                    10px
+        display                 block
+        content                 "\00a0"
+
+      .users
+        width                   auto
+        max-height              70%vh
+
+        ul
+          height 100%
+          width 100%
+          overflow-y              scroll
+          overflow-x              hidden
+          margin                0
+          padding               10px 40px 0px 10px
+
+        a
+          color                 #222
+          margin                0
+
+          li
+            list-style-type     none
+            margin-bottom       10px
+            text-align          left
+            font-weight         normal
+            font-size           0.8em
