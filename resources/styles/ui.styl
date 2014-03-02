@@ -71,7 +71,11 @@ input
     max-width                 470px
 
     h2
-      color                   #222
+      color                   #333
+
+    h3
+      color                   #333
+
 
     .release
       margin                  0 0 1.3em 1.3em
@@ -79,8 +83,8 @@ input
 
   .catalogue:hover ~ .chat .sidebar
     background-color          black
-    min-width                 1em !important
-    max-width                 1em !important
+    min-width                 1em
+    max-width                 1em
 
   .catalogue:hover ~ .chatinput form
     left                      35px
@@ -93,6 +97,36 @@ input
   .catalogue:hover ~ .musicplayer
     right                     500px
 
+  // should find a way to make more dry
+
+  .catalogue.show
+    min-width                 470px
+    max-width                 470px
+
+    h2
+      color                   #222
+
+    .release
+      margin                  0 0 1.3em 1.3em
+
+  .catalogue.show ~ .chat .sidebar
+    background-color          black
+    min-width                 1em !important
+    max-width                 1em !important
+
+  .catalogue.show ~ .chatinput form
+    left                      35px !important
+    right                     500px !important
+
+  .catalogue.show ~ .sidebar
+    min-width                 12px !important
+    max-width                 12px !important
+
+  .catalogue.show ~ .musicplayer
+    right                     500px !important
+
+  // end
+
   .sidebar:hover
     min-width                 14em
     max-width                 14em
@@ -102,5 +136,5 @@ input
 
   // animate the hovers
 
-  .catalogue, .sidebar, .chatinput form, .release, h2, .musicplayer
+  .catalogue, .sidebar, .chatinput form, .release, h2, h3, .musicplayer
     transition                all 0.3s ease-in-out

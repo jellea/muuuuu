@@ -71,15 +71,18 @@ input {
   max-width: 470px;
 }
 .container .catalogue:hover h2 {
-  color: #222;
+  color: #333;
+}
+.container .catalogue:hover h3 {
+  color: #333;
 }
 .container .catalogue:hover .release {
   margin: 0 0 1.3em 1.3em;
 }
 .container .catalogue:hover ~ .chat .sidebar {
   background-color: #000;
-  min-width: 1em !important;
-  max-width: 1em !important;
+  min-width: 1em;
+  max-width: 1em;
 }
 .container .catalogue:hover ~ .chatinput form {
   left: 35px;
@@ -91,6 +94,32 @@ input {
 }
 .container .catalogue:hover ~ .musicplayer {
   right: 500px;
+}
+.container .catalogue.show {
+  min-width: 470px;
+  max-width: 470px;
+}
+.container .catalogue.show h2 {
+  color: #222;
+}
+.container .catalogue.show .release {
+  margin: 0 0 1.3em 1.3em;
+}
+.container .catalogue.show ~ .chat .sidebar {
+  background-color: #000;
+  min-width: 1em !important;
+  max-width: 1em !important;
+}
+.container .catalogue.show ~ .chatinput form {
+  left: 35px !important;
+  right: 500px !important;
+}
+.container .catalogue.show ~ .sidebar {
+  min-width: 12px !important;
+  max-width: 12px !important;
+}
+.container .catalogue.show ~ .musicplayer {
+  right: 500px !important;
 }
 .container .sidebar:hover {
   min-width: 14em;
@@ -104,6 +133,7 @@ input {
 .container .chatinput form,
 .container .release,
 .container h2,
+.container h3,
 .container .musicplayer {
   transition: all 0.3s ease-in-out;
 }
@@ -346,7 +376,7 @@ input {
   overflow: hidden;
   margin: 0px;
 }
-.catalogue .releases p {
+.catalogue .releases h3 {
   color: #fff;
   padding: 1em;
 }

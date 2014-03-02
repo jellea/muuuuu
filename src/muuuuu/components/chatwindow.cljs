@@ -24,9 +24,17 @@
             [:div.content content]
           ])))
 
+(defn click [e user owner]
+  (.log js/console user)
+  ; Switch to different library
+  (.text (js/$ ".catalogue h2") user)
+  (.addClass (js/$ ".catalogue") "show")
+  (.setTimeout js/window #(.removeClass (js/$ ".catalogue") "show"), 1000)
+)
+
 (defn user [user owner]
   (om/component
-    (html [:li user])))
+    (html [:li {:onClick #(click % user)} user])))
 
 (defn room [data owner opts]
   (let [[title color msgs users]
@@ -40,7 +48,7 @@
         )
       )
       om/IRender
-      (render [_]<D-§>
+      (render [_]
         (html [:section.chatroom {:data-panel title
                   :class (if (false? (:bright color)) "bright")
                   :style #js {:backgroundColor (str "#" (:hex color))}}
@@ -69,7 +77,11 @@
   (reify
     om/IDidMount
     (did-mount [_]
-      (muuuuu.events.init-panelsnap)
+      (.panelSnap (js/$ ".chat")
+                  #js {:$menu (js/$ ".joinchatmenu")
+                       :slideSpeed 200
+                       :menuSelector "li"})
+
       (muuuuu.events.up-and-down-keys)
 
       (.on (js/$ ".chat") "panelsnap:start" (fn [self target]

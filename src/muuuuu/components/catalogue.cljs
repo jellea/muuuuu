@@ -20,6 +20,6 @@
     (html [:aside.catalogue
             [:h2 "Your Library"]
             [:div.releases
-              [:p "most listened"]
+              [:h3 "most listened"]
               (om/build-all release releases {:key :id})
             ]])))
