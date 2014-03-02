@@ -34,7 +34,7 @@
 
 (defn user [user owner]
   (om/component
-    (html [:li {:onClick #(click % user)} user])))
+    (html [:li {:onClick #(click % user owner)} user])))
 
 (defn room [data owner opts]
   (let [[title color msgs users]
@@ -89,6 +89,11 @@
         (.focus (. js/document (getElementById "yourmsg")))
 
         ; Warning dirty hacking ahead!
+          ;(-> rooms
+            ;(assoc :selected-channel args)
+            ;(assoc-in [:old-channel :selected] false)
+            ;(assoc-in [:channels args :selected] true))
+
         (om/transact! rooms
           (fn [rooms]
             ; flatten the lists to a big hash map

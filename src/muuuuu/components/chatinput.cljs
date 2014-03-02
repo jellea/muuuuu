@@ -29,29 +29,25 @@
   ;(go (let [res (<! (http/post url {:json-params comment}))]
         ;(prn (get-in res [:body :message])))))
 
-(defn handle-submit
-  [e app owner]
+(defn send-message
+  [e state owner]
   (let [[text text-node] (value-from-node owner "yourmessage")]
     (when text
-      ;(om/transact! app
-      ;(fn [rooms] (assoc rooms test {:test true})))
-      ;(om/transact! app
-        ;fn [rooms] (assoc :rooms {:sender "you" :content text})
-      ;)
-      (prn @app)
+      ;(om/transact! (current-room (:rooms @state))
+        ;(fn [msgs] (conj msgs {:sender "you" :content text})))
       (clear-nodes! text-node))
     false))
 
-(defn init [app owner]
-  (if (> (count (get-active-rooms (:rooms app))) 0)
+(defn init [state owner]
+  (if (> (count (get-active-rooms (:rooms state))) 0)
   (om/component
     (html [:div.chatinput
-            [:form {:onSubmit #(send-message % app owner)}
+            [:form {:onSubmit #(send-message % state owner)}
               [:div {:className
                   (str "name" (if (:bright (:color (second (first
-                  (filter (fn [r] (= (:inviewport (second r)) true)) (:rooms app))
+                  (filter (fn [r] (= (:inviewport (second r)) true)) (:rooms state))
                                    ))) true) "" " bright"))}
-                (:yourname app)]
+                (:yourname state)]
               [:input#yourmsg.yourmessage {:type "text" :ref "yourmessage"
                                          :placeholder "Your Message"}]
               [:input {:type "submit" :value "Send!"}]
