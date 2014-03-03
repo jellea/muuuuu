@@ -59,7 +59,7 @@
                 [:form {:onSubmit #(send-message % state roomname owner)}
                   [:div {:className
                       (str "name" (if (:bright (:color (second current)) true) "" " bright"))}
-                    (:yourname state)]
+                    [:a (:yourname state)]]
                   [:input#yourmsg.yourmessage {:type "text" :ref "yourmessage"
                                              :placeholder "Your Message"}]
                   [:input {:type "submit" :value "Send!"}]

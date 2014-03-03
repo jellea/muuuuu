@@ -15,13 +15,29 @@
 
 ; join leave events
 
-(defn message [{:keys [sender msg-type content] :as msg} owner {:keys [room] :as opts}]
+(defn message [{:keys [sender msg-type content] :as msg} owner]
   (om/component
     (html [:div {:className (str "message " msg-type)}
             [:div.sender
               [:a sender]]
             [:div.content content]
           ])))
+
+(defn messages [data owner]
+  (reify
+    om/IDidUpdate
+    (did-update [_ _ _]
+      ; scroll messages to the bottom
+      ; TODO if scrolled up, don't scroll down
+      (set! (.-scrollTop (.getDOMNode owner)) 1000000)
+
+      ; if current room is not :intheviewport set :unread true
+    )
+    om/IRender
+    (render [_]
+      (html [:div.messages
+        (om/build-all message data {:key :id})]))
+))
 
 (defn click [e user owner]
   (.log js/console user)
@@ -48,7 +64,6 @@
       )
       om/IDidUpdate
       (did-update [_ _ _]
-        ; scroll to msgs top! :)
       )
       om/IRender
       (render [_]
@@ -57,8 +72,7 @@
                   :style #js {:backgroundColor (str "#" (:hex color))}}
                 [:h2 title [:span.options [:a "delete"] [:a "notify"]]]
                 [:div.chatcontainer
-                  [:div.messages
-                    (om/build-all message msgs {:key :id :opts {:room title}})]
+                  (om/build messages msgs)
                   [:ul.userlist
                     [:li.header "Users"
                       [:span.count (str" (" (count users) ")")]]

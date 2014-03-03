@@ -32,7 +32,6 @@
         bottom                5em
         top                   4em
         padding               0 30px 0 0
-        overflow              scroll
         width                 100%
 
         &:hover > .userlist
@@ -40,12 +39,15 @@
 
         .messages
           min-width           500px
+          overflow            hidden
+          height              auto
           flex                1 1 auto
 
         .userlist
           float               right
           opacity             0
           margin-right        5em
+          //min-width           200px
           transition          opacity 0.3s ease-in 0.3s
 
           li
