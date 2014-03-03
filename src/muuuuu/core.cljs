@@ -1,6 +1,7 @@
 (ns muuuuu.core
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
+            [muuuuu.mock]
             [muuuuu.components.chatwindow]
             [muuuuu.components.roomlist]
             [muuuuu.components.catalogue]

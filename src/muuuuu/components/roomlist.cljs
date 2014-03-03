@@ -35,7 +35,7 @@
   (let [[room] [{:color (get-next-color) :active true
                  :order (count (get-active-rooms @rooms))
                  :inviewport false :id (guid) :users usernames
-                 :msgs [{:sender "muuuuu", :msg-type "action" :content (str "You just joined " title), :id (guid)}{:sender "Jelle", :content (str "Hey, Ustina!"), :id (guid)}{:sender "You", :msg-type "self", :content (str "Hey, Jelle!"), :id (guid)}]}]]
+                 :msgs [{:sender "muuuuu", :msg-type "action" :content (str "You just joined " title), :id (guid)}]}]]
 
     (om/transact! rooms
       (fn [rooms] (assoc rooms title room)))))
