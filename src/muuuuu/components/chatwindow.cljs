@@ -2,11 +2,10 @@
   (:require [goog.events :as events]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [muuuuu.events]
+            [muuuuu.events.user-events]
             [sablono.core :as html :refer-macros [html]]
-            [muuuuu.utils :refer [get-active-rooms]]))
+            [muuuuu.utils :refer [get-active-rooms current-room]]))
 
-(enable-console-print!)
 
 ; Structure (element.classname - componentname)
 ; div.chat - allrooms
@@ -34,7 +33,7 @@
 
 (defn user [user owner]
   (om/component
-    (html [:li {:onClick #(click % user)} user])))
+    (html [:li {:onClick #(click % user owner)} user])))
 
 (defn room [data owner opts]
   (let [[title color msgs users]
@@ -46,6 +45,10 @@
         (.panelSnap (js/$ ".chat") "snapToPanel"
           (js/$ (str "[data-panel=\"" title "\"]"))
         )
+      )
+      om/IDidUpdate
+      (did-update [_ _ _]
+        ; scroll to msgs top! :)
       )
       om/IRender
       (render [_]
@@ -82,24 +85,25 @@
                        :slideSpeed 200
                        :menuSelector "li"})
 
-      (muuuuu.events.up-and-down-keys)
+      (muuuuu.events.user-events.up-and-down-keys)
 
       (.on (js/$ ".chat") "panelsnap:start" (fn [self target]
-        ;set focus on chat input after scroll
-        (.focus (. js/document (getElementById "yourmsg")))
 
-        ; Warning dirty hacking ahead!
-        (om/transact! rooms
-          (fn [rooms]
-            ; flatten the lists to a big hash map
-            (apply hash-map (flatten
-              ; iterate and make lists like: (name {:viewport true})
-              (map (fn [r]
-                (list (first r) (merge (second r) {:inviewport
-                  (if (= (first r) (.attr target "data-panel")) true false)
-              })))
-            rooms)))))
-      ))
+
+        ;(if (not (identical? (aget (.-prevObject target) "0") js/document))
+          ;(.log js/console (.attr (.-prevObject target) "data-panel"))
+        ;)
+
+        ;set :viewport on current room after scroll
+        (.focus (. js/document (getElementById "yourmsg")))
+          (om/transact! rooms
+            (fn [rooms]
+              (let [current (.attr target "data-panel")
+                    prev (first (current-room rooms))]
+              (-> rooms
+                (assoc-in [prev :inviewport] false)
+                (assoc-in [current :inviewport] true))
+              )))))
     )
     om/IRender
     (render [_]

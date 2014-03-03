@@ -10,6 +10,11 @@
     (when-not (empty? v)
       [v n])))
 
+(defn js-values [obj]
+  (let [values (array)]
+    (goog.object/forEach obj (fn [val key obj] (.push values val)))
+    values))
+
 (defn clear-nodes!
   "Clear specified DOM input elements"
   [& nodes]
@@ -45,7 +50,7 @@
 )
 
 (defn current-room [rooms-state]
-  (first (filter (fn [r] (= (:inviewport (second r)) true)) (rooms-state)))
+  (first (filter (fn [r] (= (:inviewport (second r)) true)) rooms-state))
 )
 
 (defn get-active-rooms "Retursn a list of only active rooms" [rooms]
