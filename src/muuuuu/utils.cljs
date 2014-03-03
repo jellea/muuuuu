@@ -10,6 +10,11 @@
     (when-not (empty? v)
       [v n])))
 
+(defn js-values [obj]
+  (let [values (array)]
+    (goog.object/forEach obj (fn [val key obj] (.push values val)))
+    values))
+
 (defn clear-nodes!
   "Clear specified DOM input elements"
   [& nodes]

@@ -7,6 +7,7 @@
             [muuuuu.components.catalogue]
             [muuuuu.components.chatinput]
             [muuuuu.components.musicplayer]
+            [muuuuu.events.user-events]
             [muuuuu.utils :refer [guid get-next-color]]
             ))
 
@@ -14,8 +15,10 @@
 
 (def app-state
   (atom {:yourname (str "Guest" (rand-int 9999))
+         :yourlib []
          :rooms muuuuu.utils.make-roomslist
-         :releases [
+         :player {}
+         :catalogue [
                      ;{:img "http://yaj0kz2x.zvq.me/197358b7bdf9735260715f06b79d0fc0c0c29612089e08249fe8d5cfc6e29ed8.300x300.jpg" :id (guid)}
                      ;{:img "http://b9hyta0l.zvq.me/3be24a8a8e35024d8d374ad651b56b38e57a3354b403ddb9a996d94d8c9d5a9f.300x300.jpg" :id (guid)}
                      ;{:img "http://b9hyw0hl.zvq.me/157e34383a392c299ef305234b04ac3462fc1c75233e32e00357642b2dc90791.300x300.jpg" :id (guid)}
@@ -30,16 +33,19 @@
     om/IWillMount
     (will-mount [_])
     om/IDidMount
-    (did-mount [_])
+    (did-mount [_]
+      ; start mocking data
+      (muuuuu.mock.mock app)
+    )
     om/IRender
     ; if inviewport give class 'selected'
     (render [_]
       (dom/div #js {:className "container"}
            (om/build muuuuu.components.chatwindow.init (:rooms app))
-           (om/build muuuuu.components.catalogue.init (:releases app))
+           (om/build muuuuu.components.catalogue.init (:catalogue app))
            (om/build muuuuu.components.roomlist.init (:rooms app))
            (om/build muuuuu.components.chatinput.init app)
-           (om/build muuuuu.components.musicplayer.init app)))))
+           (om/build muuuuu.components.musicplayer.init (:player app))))))
 
 (om/root
   container
