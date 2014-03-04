@@ -15,11 +15,13 @@
     (html [:div.release
             [:img {:src img}]])))
 
-(defn init [releases owner]
+(defn init [{:keys [whos mostlistened] :as releases} owner]
   (om/component
     (html [:aside.catalogue
-            [:h2 "Your Library"]
+            [:h2 whos]
             [:div.releases
-              [:h3 "most listened"]
-              (om/build-all release releases {:key :id})
+              (if mostlistened
+                [:h3 "most listened"]
+                (om/build-all release mostlistened {:key :id})
+              )
             ]])))

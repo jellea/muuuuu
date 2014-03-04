@@ -23,15 +23,18 @@
             [:div.content content]
           ])))
 
-(defn messages [data owner]
+(defn messages [data owner {:keys [roomstate]}]
   (reify
     om/IDidUpdate
     (did-update [_ _ _]
       ; scroll messages to the bottom
       ; TODO if scrolled up, don't scroll down
       (set! (.-scrollTop (.getDOMNode owner)) 1000000)
-
+      ;(prn (type roomstate))
       ; if current room is not :intheviewport set :unread true
+      ;(if (false? (:inviewport (second roomstate)))
+        ;(prn roomstate)
+        ;(om/set-state! roomstate (first roomstate) (assoc (second roomstate) (:unread true))))
     )
     om/IRender
     (render [_]
@@ -62,17 +65,14 @@
           (js/$ (str "[data-panel=\"" title "\"]"))
         )
       )
-      om/IDidUpdate
-      (did-update [_ _ _]
-      )
       om/IRender
       (render [_]
         (html [:section.chatroom {:data-panel title
                   :class (if (false? (:bright color)) "bright")
                   :style #js {:backgroundColor (str "#" (:hex color))}}
-                [:h2 title [:span.options [:a "delete"] [:a "notify"]]]
+                [:h2 title [:span.options [:a "delete"] [:a "notify"] [:a "color"] [:a "backlog"]]]
                 [:div.chatcontainer
-                  (om/build messages msgs)
+                  (om/build messages (reverse (take 15 (reverse msgs))) {:opts {:roomstate title}})
                   [:ul.userlist
                     [:li.header "Users"
                       [:span.count (str" (" (count users) ")")]]

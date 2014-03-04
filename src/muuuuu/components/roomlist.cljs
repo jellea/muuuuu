@@ -50,11 +50,14 @@
     false))
 
 (defn joinedchannel [data owner]
-  (let [[title color][(first data)(:color (second data))]]
+  (let [title (first data)
+        color (:color (second data))
+        unread (:unread (second data))]
   (om/component
     (html [:li
             {:data-panel title
-             :className (if (false? (:bright color)) "bright")
+             :className (str (if (false? (:bright color)) "bright") ""
+                        (if (true? unread) "unread"))
              :style  #js {:borderColor (str "#" (:hex color))
                         :backgroundColor (str "#" (:hex color))}}
             [:a title]

@@ -20,6 +20,6 @@
 )
 
 (defn mock [state]
-  (let [timer (goog/Timer. 2000)]
+  (let [timer (goog/Timer. 5000)]
     (.start timer)
     (events/listen timer Timer/TICK #(add-message state))))
