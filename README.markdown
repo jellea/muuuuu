@@ -1,4 +1,4 @@
-## Muuuu (worktitle)
+## Muuuuu (worktitle)
 _a soulseek-inspired p2p music sharing web app_
 
 ### Warning
