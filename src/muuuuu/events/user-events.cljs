@@ -4,6 +4,7 @@
             [goog.events.FileDropHandler :as FileDropHandler]))
 
 (defn up-and-down-keys "Bind panelsnap to up and down arrow keys." []
+  ; still need to rewrite to goog.events
   (.add js/shortcut
     "Up"
     #(.panelSnap (js/$ ".chat") "snapTo" "prev")
@@ -13,6 +14,14 @@
   (.add js/shortcut
     "Down"
     #(.panelSnap (js/$ ".chat") "snapTo" "next")
+    #js {:type "keydown" :propagate false :target js/document}
+))
+
+(defn rightkey-show-catalogue []
+  ; still needs some work on 
+  (.add js/shortcut
+    "Right"
+    #(.addClass (js/$ ".catalogue") "show")
     #js {:type "keydown" :propagate false :target js/document}
 ))
 

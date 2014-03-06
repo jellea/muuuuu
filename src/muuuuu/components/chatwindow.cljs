@@ -19,7 +19,8 @@
   (om/component
     (html [:div {:className (str "message " msg-type)}
             [:div.sender
-              [:a sender]]
+              [:a (if (not= sender "You"){:onClick #(click % sender owner)})
+               sender]]
             [:div.content content]
           ])))
 
@@ -73,10 +74,11 @@
                 [:h2 title [:span.options [:a "delete"] [:a "notify"] [:a "color"] [:a "backlog"]]]
                 [:div.chatcontainer
                   (om/build messages (reverse (take 15 (reverse msgs))) {:opts {:roomstate title}})
-                  [:ul.userlist
-                    [:li.header "Users"
-                      [:span.count (str" (" (count users) ")")]]
-                    (om/build-all user users)]
+                  (if (:inviewport (second data))
+                    [:ul.userlist
+                      [:li.header "Users"
+                        [:span.count (str" (" (count users) ")")]]
+                      (om/build-all user users)])
                  ]
               ])))))
 
@@ -96,14 +98,12 @@
     (did-mount [_]
       (.panelSnap (js/$ ".chat")
                   #js {:$menu (js/$ ".joinchatmenu")
-                       :slideSpeed 200
+                       :slideSpeed 150
                        :menuSelector "li"})
 
       (muuuuu.events.user-events.up-and-down-keys)
 
       (.on (js/$ ".chat") "panelsnap:start" (fn [self target]
-
-
         ;(if (not (identical? (aget (.-prevObject target) "0") js/document))
           ;(.log js/console (.attr (.-prevObject target) "data-panel"))
         ;)
@@ -126,6 +126,6 @@
                 (om/build intro nil)
                 )
               (om/build-all room
-                (sort-by #(:order(second %)) (get-active-rooms rooms))
+                (sort-by #(:order (second %)) (get-active-rooms rooms))
                 {:key :id})
             ]))))

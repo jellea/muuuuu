@@ -21,7 +21,7 @@
                 :output-dir "out"
                 :optimizations :none
                 :source-map true }
-              :notify-command ["growlnotify" "-n" "ClojureScript compiler" "-m"]}
+              :notify-command ["growlnotify" "-n" "ClojureScript compiler says:" "-m"]}
              {:id "release"
               :source-paths ["src"]
               :compiler {

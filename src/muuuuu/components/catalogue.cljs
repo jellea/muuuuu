@@ -1,6 +1,7 @@
 (ns muuuuu.components.catalogue
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
+            [muuuuu.events.user-events :refer [rightkey-show-catalogue]]
             [sablono.core :as html :refer-macros [html]]
             ))
 
@@ -16,12 +17,18 @@
             [:img {:src img}]])))
 
 (defn init [{:keys [whos mostlistened] :as releases} owner]
-  (om/component
-    (html [:aside.catalogue
-            [:h2 whos]
-            [:div.releases
-              (if mostlistened
-                [:h3 "most listened"]
-                (om/build-all release mostlistened {:key :id})
-              )
-            ]])))
+  (reify
+    om/IDidMount
+    (did-mount [_]
+      (rightkey-show-catalogue)
+    )
+    om/IRender
+    (render [_]
+      (html [:aside.catalogue
+              [:h2 whos]
+              [:div.releases
+                (if mostlistened
+                  [:h3 "most listened"]
+                  (om/build-all release mostlistened {:key :id})
+                )
+              ]]))))
