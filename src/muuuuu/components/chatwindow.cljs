@@ -1,5 +1,7 @@
 (ns muuuuu.components.chatwindow
   (:require [goog.events :as events]
+            [goog.events.KeyHandler]
+            [clojure.set :refer [rename-keys]]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [muuuuu.events.user-events]
@@ -64,6 +66,18 @@
         ; jump to chatroom on mount
         (.panelSnap (js/$ ".chat") "snapToPanel"
           (js/$ (str "[data-panel=\"" title "\"]"))
+        )
+
+        (if (= title "create new room")
+          (let [htmlelement (om/get-node owner "title")]
+            (.focus htmlelement)
+            (let [handler (events/KeyHandler. htmlelement)]
+              (events/listen handler
+                "key" (fn [e] (when (= (.-keyCode e) 13); ENTER key
+                  (do (.preventDefault e)
+                    (if (not= (.-innerText htmlelement) "Create New Room")
+                      (rename-room e (.-innerText htmlelement) state)) false))))
+          ))
         )
       )
       om/IRender

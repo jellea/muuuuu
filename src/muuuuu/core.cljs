@@ -7,7 +7,8 @@
             [muuuuu.components.catalogue]
             [muuuuu.components.chatinput]
             [muuuuu.components.musicplayer]
-            [muuuuu.events.user-events]
+            [muuuuu.events.user_events]
+            [muuuuu.components.modalwindow]
             [muuuuu.utils :refer [guid get-next-color]]
             ))
 
