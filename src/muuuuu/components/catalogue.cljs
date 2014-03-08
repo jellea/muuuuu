@@ -11,7 +11,7 @@
 ;   div.releases
 ;     div.release - release
 
-(defn release [{:keys [img id]} app owner]
+(defn release [{:keys [img]} app owner]
   (om/component
     (html [:div.release
             [:img {:src img}]])))
@@ -27,8 +27,7 @@
       (html [:aside.catalogue
               [:h2 whos]
               [:div.releases
-                (if mostlistened
-                  [:h3 "most listened"]
-                  (om/build-all release mostlistened {:key :id})
-                )
+                (if (not= (count mostlistened) 0) [:h3 "most listened"])
+                (om/build-all release (take 6 mostlistened) {:key :id})
+                (if (not= (count files) 0) [:h3 "files"])
               ]]))))

@@ -8,8 +8,6 @@
             [sablono.core :as html :refer-macros [html]]
             [muuuuu.utils :refer [guid get-active-rooms current-room]]))
 
-(enable-console-print!)
-
 (defn- value-from-node
   [component field]
   (let [n (om/get-node component field)
