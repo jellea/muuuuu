@@ -2,18 +2,23 @@
   .chat
     background-color          #16a085
 
-    h2 .options
-      position                absolute
-      font-size               0.4em
-      opacity                 0
-      margin-left             -3em
-      top                     1.8em
-      text-transform          none
-      transition              all 0.1s linear
+    h2
+      .title[contenteditable=true]
+        outline               none
+        border                1px #fff solid
 
-      a
-        text-decoration       none
-        margin-left           0.7em
+      .options
+        position              absolute
+        font-size             0.4em
+        opacity               0
+        margin-left           -3em
+        top                   1.8em
+        text-transform        none
+        transition            all 0.1s linear
+
+        a
+          text-decoration     none
+          margin-left         0.7em
 
     h2:hover > .options
       opacity                 1

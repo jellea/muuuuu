@@ -45,19 +45,18 @@
         (om/build-all message data {:key :id})]))
 ))
 
-(defn click [e user owner]
-  (.log js/console user)
-  ; Switch to different library
-  (.text (js/$ ".catalogue h2") user)
-  (.addClass (js/$ ".catalogue") "show")
-  (.setTimeout js/window #(.removeClass (js/$ ".catalogue") "show"), 1000)
-)
-
 (defn user [user owner]
   (om/component
-    (html [:li {:onClick #(click % user owner)} user])))
+    (html [:li {:onClick #(show-lib % user owner)} user])))
 
-(defn room [data owner opts]
+(defn delete-room [room state]
+  (om/transact! state #(assoc-in %1 [room :active] false)))
+
+(defn rename-room [e title state]
+  (om/transact! state
+    #(rename-keys %1 {"create new room" title})))
+
+(defn room [data owner {:keys [state] :as opts}]
   (let [[title color msgs users]
         [(first data) (:color (second data)) (:msgs (second data)) (:users (second data))]]
     (reify
@@ -85,9 +84,16 @@
         (html [:section.chatroom {:data-panel title
                   :class (if (false? (:bright color)) "bright")
                   :style #js {:backgroundColor (str "#" (:hex color))}}
-                [:h2 title [:span.options [:a "delete"] [:a "notify"] [:a "color"] [:a "backlog"]]]
+                [:h2
+                  [:span.title
+                    {:contentEditable (if (= title "create new room") true)
+                     :ref "title"}
+                    title]
+                  [:span.options
+                    [:a {:onClick #(delete-room title state)} "delete"]
+                    [:a "notifications"] [:a "color"] [:a "backlog"]]]
                 [:div.chatcontainer
-                  (om/build messages (reverse (take 15 (reverse msgs))) {:opts {:roomstate title}})
+                  (om/build messages (reverse (take 15 (reverse msgs))))
                   (if (:inviewport (second data))
                     [:ul.userlist
                       [:li.header "Users"
@@ -122,16 +128,19 @@
           ;(.log js/console (.attr (.-prevObject target) "data-panel"))
         ;)
 
-        ;set :viewport on current room after scroll
-        (.focus (. js/document (getElementById "yourmsg")))
-          (om/transact! rooms
-            (fn [rooms]
-              (let [current (.attr target "data-panel")
-                    prev (first (current-room rooms))]
-              (-> rooms
-                (assoc-in [prev :inviewport] false)
-                (assoc-in [current :inviewport] true))
-              )))))
+        ; skip focus to chatinput and focus title if new room
+        (if (not= "new room" (.attr target "data-panel"))
+          (.focus (. js/document (getElementById "yourmsg")))
+        )
+
+        (om/transact! rooms
+          (fn [rooms]
+            (let [current (.attr target "data-panel")
+                  prev (first (current-room rooms))]
+            (-> rooms
+              (assoc-in [prev :inviewport] false)
+              (assoc-in [current :inviewport] true))
+            )))))
     )
     om/IRender
     (render [_]
@@ -141,5 +150,5 @@
                 )
               (om/build-all room
                 (sort-by #(:order (second %)) (get-active-rooms rooms))
-                {:key :id})
+                {:key :id :opts {:state rooms}})
             ]))))
