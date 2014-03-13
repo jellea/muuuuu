@@ -4,7 +4,6 @@
             [clojure.string]
             [goog.events :as events]
             [goog.events.KeyHandler]
-            [goog.events.KeyCodes]
             [sablono.core :as html :refer-macros [html]]
             [muuuuu.utils :refer [guid get-active-rooms current-room]]))
 
@@ -25,10 +24,22 @@
 ;     h2
 ;     div.chatcontainer
 
-;(defn save-comment!
-  ;[comment url]
-  ;(go (let [res (<! (http/post url {:json-params comment}))]
-        ;(prn (get-in res [:body :message])))))
+(defn change-name [e owner state roomname]
+  (let [elem (om/get-node owner "yourname")
+        handler (events/KeyHandler. elem)
+        prevname (.-innerText elem)]
+      (events/listen handler
+        "key" (fn [e] (when (= (.-keyCode e) 13); ENTER key
+          (do (.preventDefault e)
+              (.blur elem)
+              (om/transact! state
+                #(-> %
+                   (assoc-in [:yourname] (.-innerText elem))
+                   (assoc-in [:rooms roomname :msgs]
+                     [{:sender "muuuuu" :content (str "You changed your name to " (.-innerText elem)) :msg-type "action"}])
+                   ))
+              false))))))
+
 
 (defn send-message
   [e state roomname owner]
@@ -45,11 +56,7 @@
     (reify
       om/IDidMount
       (did-mount [_]
-        (let [keyboard (events.KeyHandler. (by-class "name"))]
-          (event/listen keyboard
-                        "key"
-                        (fn [e] (when (= (.-keyCode e) events.KeyCodes/TAB)
-                                 (do (prn "ENTEERRU!"))))))
+        ; change name listener
       )
       om/IRender
       (render [_]
@@ -57,7 +64,8 @@
                 [:form {:onSubmit #(send-message % state roomname owner)}
                   [:div {:className
                       (str "name" (if (:bright (:color (second current)) true) "" " bright"))}
-                    [:a (:yourname state)]]
+                    [:a#yourname {:onClick #(change-name % owner state roomname)
+                                  :contentEditable true :ref "yourname"} (:yourname state)]]
                   [:input#yourmsg.yourmessage {:type "text" :ref "yourmessage"
                                              :placeholder "Your Message"}]
                   [:input {:type "submit" :value "Send!"}]

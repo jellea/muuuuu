@@ -21,23 +21,27 @@
 
 (defn add-channel [title rooms]
   "Puts a new channel in the app-state"
-  (let [[room] [{:color (get-next-color) :active true
-                 :order (count (get-active-rooms @rooms))
-                 :inviewport false :id (guid) :users (usernames)
-                 :msgs [{:sender "muuuuu", :msg-type "action" :content (str "You just joined " title), :id (guid)}]}]]
+  (let [newroom (if (= title "create new room") true)
+        stnd-message (if-not newroom {:sender "muuuuu", :msg-type "action"
+                                      :content (str "You just joined " title), :id (guid)})
+        room {:color (get-next-color) :active true :connected (if-not newroom true false)
+              :order (count (get-active-rooms @rooms))
+              :inviewport false :id (guid) :users (if-not newroom (usernames))
+              :msgs [stnd-message]}]
 
     (om/transact! rooms
       (fn [rooms] (assoc rooms title room)))))
 
 (defn joinedchannel [data owner]
   (let [title (first data)
-        color (:color (second data))
-        unread (:unread (second data))]
+        room (second data)
+        color (:color room)]
   (om/component
     (html [:li
             {:data-panel title
-             :className (str (if (false? (:bright color)) "bright") ""
-                        (if (true? unread) "unread"))
+             :className (str (if (false? (:bright color)) "bright") " "
+                        (if (true? (:unread room)) "unread") " "
+                        (if (true? (:inviewport room)) "active"))
              :style  #js {:borderColor (str "#" (:hex color))
                         :backgroundColor (str "#" (:hex color))}}
             [:a title]

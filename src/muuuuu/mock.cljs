@@ -7,21 +7,26 @@
 
 (enable-console-print!)
 
-(defn add-message [state]
+(defn rand-action [state]
   (let [lorem (goog.text.LoremIpsum.)
         sentence (.generateSentence lorem)
         randroom (rand-nth (keys (get-active-rooms (:rooms @state))))
-        randuser (rand-nth (get-in @state [:rooms randroom :users]))]
+        randuser (rand-nth (get-in @state [:rooms randroom :users]))
+        normalmsg {:sender randuser :content sentence :msg-type "text"}
+        mention {:sender randuser :content (str "@" (:yourname @state) " are you paying attention?") :msg-type "text"}
+        listening {:sender randuser :content (str "is listening to " (first (usernames)) "- Track " (rand-int 22) " // Listen") :msg-type "action"}
+        msg (rand-nth (into [listening mention] (for [i (range 10)] normalmsg)))]
 
-    (if (not (nil? randroom))
+    (if (and (not (nil? randroom)) (not (nil? randuser)))
       (om/transact! state [:rooms randroom :msgs]
-          (fn [msgs] (conj msgs {:sender randuser :content sentence :msg-type "text"})))
-    ))
-)
+          (fn [msgs] (conj msgs msg))))))
 
 (def genrelist (list "acoustic" "ambient" "blues" "classical" "country" "electronic" "emo" "folk" "hardcore" "hip hop" "indie" "jazz" "latin" "metal" "pop" "pop punk" "punk" "reggae" "rnb" "rock" "soul" "world" "60s" "70s" "80s" "90s" ))
 
-(defn usernames [] (vec (filter #(= (rand-int 2) 1) ["Ryoji Ikeda" "Richie Hawtin" "Nathan Fake" "Jimi Hendrix" "Alva Noto" "Speedy J" "Aphex Twin" "Mike Dehnert" "Luke Abbott" "John Coltrane" "Kangding Ray" "Electric Wizard" "Frédéric Chopin"])))
+(defn usernames [] (vec (filter #(= (rand-int 2) 1) ["Ryoji Ikeda" "Porter Ricks" "Miles Davis" "Four Tet" "Kevin Drumm" "Nathan Fake" "Jimi Hendrix" "Alva Noto" "Speedy J" "Aphex Twin" "Mike Dehnert" "Luke Abbott" "John Coltrane" "Oren Ambarchi" "William Basinski" "Thom Yorke" "Anton Webern"
+                                                     "Kangding Ray" "Electric Wizard" "Frédéric Chopin"])))
+
+(def albumcovers (for [i (range 1 8)] {:img (str "/resources/img/covers/" i ".png") :id (guid)}))
 
 (def make-roomslist
   (apply hash-map
@@ -30,6 +35,6 @@
                  genrelist))))
 
 (defn mock [state]
-  (let [timer (goog/Timer. 10000)]
+  (let [timer (goog/Timer. 2500)]
     (.start timer)
-    (events/listen timer Timer/TICK #(add-message state))))
+    (events/listen timer Timer/TICK #(rand-action state))))

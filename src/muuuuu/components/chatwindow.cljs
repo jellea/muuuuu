@@ -1,12 +1,15 @@
 (ns muuuuu.components.chatwindow
   (:require [goog.events :as events]
             [goog.events.KeyHandler]
+            [goog.History]
             [clojure.set :refer [rename-keys]]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [muuuuu.events.user-events]
+            [clojure.string :refer [trim]]
+            [muuuuu.controllers.notifications :as notify]
             [sablono.core :as html :refer-macros [html]]
-            [muuuuu.utils :refer [get-active-rooms current-room]]))
+            [muuuuu.utils :refer [get-active-rooms current-room get-next-color]]))
 
 
 ; Structure (element.classname - componentname)
@@ -17,32 +20,46 @@
 
 ; join leave events
 
-(defn message [{:keys [sender msg-type content] :as msg} owner]
-  (om/component
-    (html [:div {:className (str "message " msg-type)}
-            [:div.sender
-              [:a (if (not= sender "You"){:onClick #(click % sender owner)})
-               sender]]
-            [:div.content content]
-          ])))
+(def history (goog/History.))
 
-(defn messages [data owner {:keys [roomstate]}]
+(defn show-lib [e user owner]
+  (.log js/console user)
+  ; Switch to different library
+  (.text (js/$ ".catalogue h2") user)
+  (.addClass (js/$ ".catalogue") "show")
+  (.setTimeout js/window #(.removeClass (js/$ ".catalogue") "show"), 1000)
+)
+
+(defn message [{:keys [sender msg-type content] :as msg} owner opts]
+  (reify
+    om/IDidMount
+    (did-mount [_]
+      (notify/on-mention msg (:roomname opts))
+    )
+    om/IRender
+    (render [_]
+      (html [:div {:className (str "message " msg-type)}
+              [:div.sender
+                [:a (if (not= sender "You"){:onClick #(show-lib % sender owner)})
+                 sender]]
+              [:div.content content]
+          ]))))
+
+(defn messages [data owner {:keys [roomname state]}]
   (reify
     om/IDidUpdate
     (did-update [_ _ _]
       ; scroll messages to the bottom
       ; TODO if scrolled up, don't scroll down
       (set! (.-scrollTop (.getDOMNode owner)) 1000000)
-      ;(prn (type roomstate))
-      ; if current room is not :intheviewport set :unread true
-      ;(if (false? (:inviewport (second roomstate)))
-        ;(prn roomstate)
-        ;(om/set-state! roomstate (first roomstate) (assoc (second roomstate) (:unread true))))
+      ;(.log js/console owner)
     )
     om/IRender
     (render [_]
       (html [:div.messages
-        (om/build-all message data {:key :id})]))
+        (if-not (= data [nil]) ; prevents a new room from showing a stripe
+          (om/build-all message data {:key :id :opts {:roomname roomname}})
+          nil)]))
 ))
 
 (defn user [user owner]
@@ -53,8 +70,18 @@
   (om/transact! state #(assoc-in %1 [room :active] false)))
 
 (defn rename-room [e title state]
+  (.setToken muuuuu.events.user-events/history title)
+
+  ; TODO bug - panelsnap breaks
+
   (om/transact! state
     #(rename-keys %1 {"create new room" title})))
+
+(defn toggle-notifications [e title state]
+  (reset! notify/state {:title "muuuuu" :message "Notifications are turned on"}))
+
+(defn change-color [room state]
+  (om/transact! state #(assoc-in %1 [room :color] (get-next-color))))
 
 (defn room [data owner {:keys [state] :as opts}]
   (let [[title color msgs users]
@@ -72,11 +99,13 @@
             (.focus htmlelement)
             (let [handler (events/KeyHandler. htmlelement)]
               (events/listen handler
-                "key" (fn [e] (when (= (.-keyCode e) 13); ENTER key
-                  (do (.preventDefault e)
-                    (if (not= (.-innerText htmlelement) "Create New Room")
-                      (rename-room e (.-innerText htmlelement) state)) false))))
-          ))
+                "key" (fn [e]
+                  (when (= (.-innerText htmlelement) "Create New Room")
+                    (do (set! (.-innerText htmlelement) "")))
+                  (when (= (.-keyCode e) 13); ENTER key
+                    (do (.preventDefault e)
+                      (if (not= (.-innerText htmlelement) "Create New Room")
+                        (rename-room e (trim (.-innerText htmlelement)) state)) false))))))
         )
       )
       om/IRender
@@ -91,9 +120,11 @@
                     title]
                   [:span.options
                     [:a {:onClick #(delete-room title state)} "delete"]
-                    [:a "notifications"] [:a "color"] [:a "backlog"]]]
+                    [:a {:onClick #(toggle-notifications % title)} "notifications"]
+                    [:a {:onClick #(change-color title state)} "color"]
+                    [:a "backlog"]]]
                 [:div.chatcontainer
-                  (om/build messages (reverse (take 15 (reverse msgs))))
+                  (om/build messages (reverse (take 15 (reverse msgs))) {:opts {:state state :roomname title}})
                   (if (:inviewport (second data))
                     [:ul.userlist
                       [:li.header "Users"
@@ -118,33 +149,35 @@
     (did-mount [_]
       (.panelSnap (js/$ ".chat")
                   #js {:$menu (js/$ ".joinchatmenu")
-                       :slideSpeed 150
+                       :slideSpeed 200
                        :menuSelector "li"})
 
       (muuuuu.events.user-events.up-and-down-keys)
 
       (.on (js/$ ".chat") "panelsnap:start" (fn [self target]
-        ;(if (not (identical? (aget (.-prevObject target) "0") js/document))
-          ;(.log js/console (.attr (.-prevObject target) "data-panel"))
-        ;)
+        (let [roomtitle (.attr target "data-panel")]
+          ;(if (not (identical? (aget (.-prevObject target) "0") js/document))
+            ;(.log js/console (.attr (.-prevObject target) "data-panel"))
+          ;)
 
-        ; skip focus to chatinput and focus title if new room
-        (if (not= "new room" (.attr target "data-panel"))
-          (.focus (. js/document (getElementById "yourmsg")))
-        )
+          ; skip focus to chatinput and focus title if new room
+          (if (not= "create new room" roomtitle)
+            (.focus (. js/document (getElementById "yourmsg")))
+          )
 
-        (om/transact! rooms
-          (fn [rooms]
-            (let [current (.attr target "data-panel")
-                  prev (first (current-room rooms))]
-            (-> rooms
-              (assoc-in [prev :inviewport] false)
-              (assoc-in [current :inviewport] true))
-            )))))
-    )
+          (.setToken muuuuu.events.user-events/history roomtitle)
+
+          (om/transact! rooms
+            (fn [rooms]
+              (let [prev (first (current-room rooms))]
+              (-> rooms
+                (assoc-in [prev :inviewport] false)
+                (assoc-in [roomtitle :inviewport] true))
+              )))))
+    ))
     om/IRender
     (render [_]
-      (html [:div.chat
+      (html [:div#chat.chat
               (if (= (count (get-active-rooms rooms)) 0)
                 (om/build intro nil)
                 )
