@@ -24,7 +24,9 @@
 ;     h2
 ;     div.chatcontainer
 
-(defn change-name [e owner state roomname]
+(defn change-name
+  "Change user name"
+  [e owner state roomname]
   (let [elem (om/get-node owner "yourname")
         handler (events/KeyHandler. elem)
         prevname (.-innerText elem)]
@@ -50,7 +52,9 @@
       (clear-nodes! text-node))
     false))
 
-(defn init [state owner]
+(defn init
+  "Chatroom input field component"
+  [state owner]
   (if (> (count (get-active-rooms (:rooms state))) 0)
   (let [current (current-room (:rooms state)) roomname (str (first current))]
     (reify

@@ -9,18 +9,38 @@
             [sablono.core :as html :refer-macros [html]]
             ))
 
-(defn drag-drop [releasesgroup]
+(defn drag-drop
+  "Initiate drag and drop listeners group"
+  [releasesgroup]
   (let [target (goog.fx.DragDrop. "chat")]
     (.init target)
     (.addTarget releasesgroup target)
   )
-  (.init drag)
+  (.init releasesgroup)
 
-  (events/listen releasesgroup "dragstart" #(prn "dragstart"))
-  (events/listen releasesgroup "drag" #(prn "drag"))
+  (events/listen releasesgroup "dragstart"
+      (fn [e] (prn "dragstart")
+              ; set .chatmessages and chatinput to red
+              ; make placeholder grey
+              (.log js/console (-> e .-dragSourceItem .-element))
+        ))
+
+  (events/listen releasesgroup "drag"
+      (fn [e] (prn "dragover")
+              ; set .chatmessages to darker red
+        ))
+
+  ;'dragover'
+  ;'dragout'
+  ;'drag' > .chatmessage and input naar rood + 
+  ;'drop'
+  ;'dragstart'
+  ;'dragend'
 )
 
-(defn release [{:keys [img] :as app} owner {:keys [drag] :as opts}]
+(defn release
+  "Release component"
+  [{:keys [img] :as app} owner {:keys [releasesgroup] :as opts}]
   (reify
     om/IDidMount
     (did-mount [_]
@@ -32,7 +52,9 @@
             [:img {:src img}]]))))
 
 
-(defn init [{:keys [whos mostlistened] :as releases} owner]
+(defn init
+  "Library (right) sidebar component"
+  [{:keys [whos mostlistened] :as releases} owner]
   (let [releasesgroup (goog.fx.DragDropGroup.)]
     (reify
       om/IDidMount
@@ -50,8 +72,8 @@
                   [:h2 whos]
                   [:div.releases
                     (if (not= (count mostlistened) 0) [:h3 "most listened"])
-                      (om/build-all release (take 6 mostlistened)
-                                    {:key :id :opts {:drag drag}})
+                    (om/build-all release (take 8 mostlistened)
+                                  {:key :id :opts {:releasesgroup releasesgroup}})
                     (if (not= (count files) 0)
-                      [:h3 "files"])
+                      [:h3 "folders"])
                   ]])))))

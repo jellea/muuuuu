@@ -11,18 +11,11 @@
             [sablono.core :as html :refer-macros [html]]
             [muuuuu.utils :refer [get-active-rooms current-room get-next-color]]))
 
-
-; Structure (element.classname - componentname)
-; div.chat - allrooms
-;   section.chatroom - room
-;     h2
-;     div.chatcontainer
-
-; join leave events
-
 (def history (goog/History.))
 
-(defn show-lib [e user owner]
+(defn show-lib
+  "Show the catalogue of a User"
+  [e user owner]
   (.log js/console user)
   ; Switch to different library
   (.text (js/$ ".catalogue h2") user)
@@ -30,7 +23,9 @@
   (.setTimeout js/window #(.removeClass (js/$ ".catalogue") "show"), 1000)
 )
 
-(defn message [{:keys [sender msg-type content] :as msg} owner opts]
+(defn message
+  "Single message component"
+  [{:keys [sender msg-type content] :as msg} owner opts]
   (reify
     om/IDidMount
     (did-mount [_]
@@ -45,7 +40,9 @@
               [:div.content content]
           ]))))
 
-(defn messages [data owner {:keys [roomname state]}]
+(defn messages
+  "Messages container component"
+  [data owner {:keys [roomname state]}]
   (reify
     om/IDidUpdate
     (did-update [_ _ _]
@@ -62,28 +59,34 @@
           nil)]))
 ))
 
-(defn user [user owner]
+(defn user
+  "User component"
+  [user owner]
   (om/component
     (html [:li {:onClick #(show-lib % user owner)} user])))
 
-(defn delete-room [room state]
+(defn delete-room
+  [room state]
   (om/transact! state #(assoc-in %1 [room :active] false)))
 
-(defn rename-room [e title state]
-  (.setToken muuuuu.events.user-events/history title)
-
+(defn rename-room
+  [e title state]
   ; TODO bug - panelsnap breaks
-
+  (.setToken muuuuu.events.user-events/history title)
   (om/transact! state
     #(rename-keys %1 {"create new room" title})))
 
-(defn toggle-notifications [e title state]
+(defn toggle-notifications
+  [e title state]
   (reset! notify/state {:title "muuuuu" :message "Notifications are turned on"}))
 
-(defn change-color [room state]
+(defn change-color
+  [room state]
   (om/transact! state #(assoc-in %1 [room :color] (get-next-color))))
 
-(defn room [data owner {:keys [state] :as opts}]
+(defn room
+  "Single room component"
+  [data owner {:keys [state] :as opts}]
   (let [[title color msgs users]
         [(first data) (:color (second data)) (:msgs (second data)) (:users (second data))]]
     (reify
@@ -129,21 +132,26 @@
                     [:ul.userlist
                       [:li.header "Users"
                         [:span.count (str" (" (count users) ")")]]
+                      [:li "You"]
                       (om/build-all user users)])
                  ]
               ])))))
 
-(defn intro [app owner]
+(defn intro
+  "Intro component"
+  [app owner]
   (om/component
-  (html [:div.intro
-          [:h3 "Hi, here's how to get started."]
-          [:p.joinchat "join some chatrooms"]
-          [:div
-            [:img {:src "resources/img/drag-example.png"}]
-            [:p "share music from your computer"]]
-          [:p.listenmusic "listen music"]])))
+    (html [:div.intro
+            [:h3 "Hi, here's how to get started."]
+            [:p.joinchat "join some chatrooms"]
+            [:div
+              [:img {:src "resources/img/drag-example.png"}]
+              [:p "share music from your computer"]]
+            [:p.listenmusic "listen music"]])))
 
-(defn init [rooms owner]
+(defn init
+  "Chatrooms container component"
+  [rooms owner]
   (reify
     om/IDidMount
     (did-mount [_]

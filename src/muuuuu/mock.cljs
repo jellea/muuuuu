@@ -26,7 +26,7 @@
 (defn usernames [] (vec (filter #(= (rand-int 2) 1) ["Ryoji Ikeda" "Porter Ricks" "Miles Davis" "Four Tet" "Kevin Drumm" "Nathan Fake" "Jimi Hendrix" "Alva Noto" "Speedy J" "Aphex Twin" "Mike Dehnert" "Luke Abbott" "John Coltrane" "Oren Ambarchi" "William Basinski" "Thom Yorke" "Anton Webern"
                                                      "Kangding Ray" "Electric Wizard" "Frédéric Chopin"])))
 
-(def albumcovers (for [i (range 1 8)] {:img (str "/resources/img/covers/" i ".png") :id (guid)}))
+(def albumcovers (for [i (range 1 12)] {:img (str "/resources/img/covers/" i ".jpg") :id (guid)}))
 
 (def make-roomslist
   (apply hash-map

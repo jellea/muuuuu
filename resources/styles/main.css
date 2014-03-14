@@ -129,7 +129,7 @@ input {
   max-width: 13.3em;
 }
 .container .sidebar:hover ~ .chatinput form {
-  left: 15em;
+  left: 14.8em;
 }
 .container .catalogue,
 .container .sidebar,
@@ -396,6 +396,7 @@ input {
 }
 .catalogue .releases .release img {
   width: 200px;
+  cursor: move;
 }
 .musicplayer {
   position: absolute;
@@ -413,6 +414,11 @@ input {
   opacity: 1;
   background-color: #fff;
   display: inline-block;
+}
+.musicplayer .hide {
+  background-color: transparent;
+  transition: all 0.5s ease-out;
+  opacity: 0;
 }
 .musicplayer .text {
   line-height: 1em;

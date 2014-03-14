@@ -16,6 +16,7 @@
 
 (enable-console-print!)
 
+
 ;(let [fpsDisplay (debug/FpsDisplay.)]
   ;(.render fpsDisplay (. js/document (getElementById "fpsdisplay"))))
 
@@ -30,6 +31,7 @@
          :modal {:hidden true}
          :catalogue {:whos "Your Library"
                      :mostlistened muuuuu.mock.albumcovers
+                     :files [nil]
                     }}))
 
 (defn container [state owner]

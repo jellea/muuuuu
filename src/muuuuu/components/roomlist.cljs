@@ -19,8 +19,9 @@
 ;           input
 ;       li                      - channel
 
-(defn add-channel [title rooms]
+(defn add-channel
   "Puts a new channel in the app-state"
+  [title rooms]
   (let [newroom (if (= title "create new room") true)
         stnd-message (if-not newroom {:sender "muuuuu", :msg-type "action"
                                       :content (str "You just joined " title), :id (guid)})
@@ -32,22 +33,26 @@
     (om/transact! rooms
       (fn [rooms] (assoc rooms title room)))))
 
-(defn joinedchannel [data owner]
+(defn joinedchannel
+  "Joined list item component"
+  [data owner]
   (let [title (first data)
-        room (second data)
+        room  (second data)
         color (:color room)]
   (om/component
     (html [:li
             {:data-panel title
              :className (str (if (false? (:bright color)) "bright") " "
-                        (if (true? (:unread room)) "unread") " "
-                        (if (true? (:inviewport room)) "active"))
+                             (if (true? (:unread room)) "unread") " "
+                             (if (true? (:inviewport room)) "active"))
              :style  #js {:borderColor (str "#" (:hex color))
                         :backgroundColor (str "#" (:hex color))}}
             [:a title]
           ]))))
 
-(defn popularchannel [data owner opts]
+(defn popularchannel
+  "Popular list item component"
+  [data owner opts]
   (om/component
       (html [:li {:onClick #(add-channel (first data) opts)}
               [:a
@@ -55,7 +60,11 @@
                 [:span.count (:usercount (second data))]
             ]])))
 
-(defn init [rooms owner]
+
+
+(defn init
+  "Room list sidebar component"
+  [rooms owner]
   (om/component
     (html [:aside.sidebar
             [:div.channellist
@@ -66,13 +75,12 @@
               [:ul.joinchatmenu
                 (om/build-all joinedchannel
                     (sort-by #(:order (second %)) (get-active-rooms rooms))
-                    {:key :id})]
+                             {:key :id})]
               [:ul
                 [:li.header "Popular rooms"]]
               [:ul.popularchatmenu
-                ;(om/build addchannelform rooms)
                 (om/build-all popularchannel
                     (sort-by #(:usercount (second %)) >
-                        (filter #(not (true? (:active (second %)))) rooms))
+                             (filter #(not (true? (:active (second %)))) rooms))
                     {:key :id :opts rooms})
           ]]])))
