@@ -19,7 +19,6 @@
                    :content (str "is listening to " (first (usernames)) "- Track " (rand-int 22) "    Listen")
                    :msg-type "action"}
         msg       (rand-nth (into [listening mention] (for [i (range 10)] normalmsg)))]
-
     (if (and (not (nil? randroom)) (not (nil? randuser)))
       (om/transact! state [:rooms randroom :msgs]
           (fn [msgs] (conj msgs msg))))))

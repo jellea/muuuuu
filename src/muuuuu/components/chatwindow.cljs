@@ -52,8 +52,7 @@
       (html [:div.messages
         (if-not (= data [nil]) ; prevents a new room from showing a stripe
           (om/build-all message data {:key :id :opts {:roomname roomname}})
-          nil)]))
-))
+          nil)]))))
 
 (defn user
   "User component"

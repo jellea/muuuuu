@@ -29,7 +29,6 @@
                       :order (count (get-active-rooms @rooms))
                       :inviewport false :id (guid) :users (if-not newroom (usernames))
                       :msgs [stnd-message]}]
-
     (om/transact! rooms
       (fn [rooms] (assoc rooms title room)))))
 
@@ -39,16 +38,15 @@
   (let [title (first data)
         room  (second data)
         color (:color room)]
-  (om/component
-    (html [:li
-            {:data-panel title
-             :className (str (if (false? (:bright color)) "bright") " "
-                             (if (true? (:unread room)) "unread") " "
-                             (if (true? (:inviewport room)) "active"))
-             :style  #js {:borderColor (str "#" (:hex color))
-                          :backgroundColor (str "#" (:hex color))}}
-            [:a title]
-          ]))))
+    (om/component
+      (html [:li
+              {:data-panel title
+               :className (str (if (false? (:bright color)) "bright") " "
+                               (if (true? (:unread room)) "unread") " "
+                               (if (true? (:inviewport room)) "active"))
+               :style  #js {:borderColor (str "#" (:hex color))
+                            :backgroundColor (str "#" (:hex color))}}
+              [:a title]]))))
 
 (defn popularchannel
   "Popular list item component"
@@ -56,8 +54,7 @@
   (om/component
       (html [:li {:onClick #(add-channel (first data) opts)}
               [:a (first data)
-                [:span.count (:usercount (second data))]
-            ]])))
+                [:span.count (:usercount (second data))]]])))
 
 (defn init
   "Room list sidebar component"
@@ -78,5 +75,4 @@
                 (om/build-all popularchannel
                     (sort-by #(:usercount (second %)) >
                              (filter #(not (true? (:active (second %)))) rooms))
-                    {:key :id :opts rooms})
-          ]]])))
+                    {:key :id :opts rooms})]]])))
