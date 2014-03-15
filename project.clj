@@ -26,7 +26,12 @@
              {:id "release"
               :source-paths ["src"]
               :compiler {
-                :output-to "out2/muuuuu.js"
-                :output-dir "out2"
+                :output-to "dist/muuuuu.js"
+                :output-dir "dist"
                 :optimizations :advanced
-                :source-map true}}]})
+                :preamble ["resources/js-ext/jquery.min.js"]
+                :externs ["resources/js-ext/jquery.customEvents.js"
+                          "resources/js-ext/jquery.panelSnap.js"]
+                :closure-warnings {:externs-validation :off
+                                   :non-standard-jsdoc :off}}}]
+    :test-commands {"unit" ["phantomjs" "test/tests.js"]}})
