@@ -450,28 +450,30 @@ input {
 #app.dropzone #chatinput {
   outline: 3px dashed;
   outline-offset: 8px;
+  background-color: rgba(255,255,255,0.1);
+  filter: blur(5px);
 }
 #app.dropzone .chatcontainer:after {
-  position: absolute;
   content: "Drop here to throw music into the room";
+  position: absolute;
   top: 50%;
   right: 50%;
-  margin-right: -11em;
-  margin-top: -1em;
-  font-size: 1.1em;
+  margin-top: -1.1em;
+  font-size: 1.2em;
   background-color: #111;
   color: #fff;
   padding: 0.5em;
+  margin-right: -11em;
 }
 #app.dropzone #chatinput:after {
-  position: absolute;
   content: "Drop here to attach the music to a message";
+  position: absolute;
   top: 50%;
   right: 50%;
-  margin-right: -11em;
-  margin-top: -1em;
-  font-size: 1.1em;
+  margin-top: -1.1em;
+  font-size: 1.2em;
   background-color: #111;
   color: #fff;
   padding: 0.5em;
+  margin-right: -11em;
 }

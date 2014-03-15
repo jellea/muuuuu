@@ -14,6 +14,7 @@
 (defn add-new-target [elemid elemgroup]
   (let [new-target (goog.fx.DragDrop. elemid)]
     (.init new-target)
+    (set! (.-outlineColor (.-style (.getElementById js/document elemid))) "rgba(255,255,255,0.3")
     (.addTarget elemgroup new-target)
     (.init elemgroup)))
 
@@ -28,10 +29,12 @@
       (events/listen releases-dnd-group "dragover" (fn [e]
         (set! (-> e .-dropTargetItem .-element .-style .-outlineColor) "rgba(255,255,255,0.8)")))
       (events/listen releases-dnd-group "dragout" (fn [e]
-        (set! (-> e .-dropTargetItem .-element .-style .-outlineColor) "rgba(255,255,255,0.3")))
+        (set! (-> e .-dropTargetItem .-element .-style .-outlineColor) "rgba(255,255,255,0.3)")))
       (events/listen releases-dnd-group "dragend" (fn [e]
         (.remove (.-classList dropzone) "dropzone")
-        (set! (-> e .-dragSourceItem .-element .-style .-opacity) 1)))))
+        (set! (-> e .-dragSourceItem .-element .-style .-opacity) 1)))
+      (events/listen releases-dnd-group "drop" (fn [e]
+        #(prn e)))))
 
 (defn release
   "Release component"
