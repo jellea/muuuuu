@@ -30,16 +30,15 @@
         display               -webkit-flex
         position              absolute
         height                auto
-        bottom                5em
+        bottom                6em
         top                   4em
-        padding               1em 30px 1em 0
-        width                 100%
+        margin                1em 0 1em 0
 
         &:hover > .userlist
           opacity                 1
 
         .messages
-          min-width           500px
+          width               50em
           overflow            hidden
           height              auto
           flex                1 1 auto
@@ -47,10 +46,9 @@
         .userlist
           float               right
           opacity             0
-          margin-right        5em
           overflow            scroll
+          width               12em
           height              auto
-          //min-width           200px
           transition          all 0.5s ease-in
 
           li

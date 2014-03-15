@@ -9,27 +9,29 @@
             [sablono.core :as html :refer-macros [html]]
             ))
 
-(defn drag-drop
+(def releases-dnd-group (goog.fx.DragDropGroup.))
+
+(defn add-new-target [elemid elemgroup]
+  (let [new-target (goog.fx.DragDrop. elemid)]
+    (.init new-target)
+    (.addTarget elemgroup new-target)
+    (.init elemgroup)))
+
+(defn init-drag-drop
   "Initiate drag and drop listeners group"
-  [releasesgroup]
-  (let [target (goog.fx.DragDrop. "chat")]
-    (.init target)
-    (.addTarget releasesgroup target)
-  )
-  (.init releasesgroup)
-
-  (events/listen releasesgroup "dragstart"
-      (fn [e] (prn "dragstart")
-              ; set .chatmessages and chatinput to red
-              ; make placeholder grey
-              (.log js/console (-> e .-dragSourceItem .-element))
-        ))
-
-  (events/listen releasesgroup "drag"
-      (fn [e] (prn "dragover")
-              ; set .chatmessages to darker red
-        ))
-)
+  []
+    (add-new-target "chatinput" releases-dnd-group)
+    (let [dropzone (.getElementById js/document "app")]
+      (events/listen releases-dnd-group "dragstart" (fn [e]
+        (.add (.-classList dropzone) "dropzone")
+        (set! (-> e .-dragSourceItem .-element .-style .-opacity) 0.3)))
+      (events/listen releases-dnd-group "dragover" (fn [e]
+        (set! (-> e .-dropTargetItem .-element .-style .-outlineColor) "rgba(255,255,255,0.8)")))
+      (events/listen releases-dnd-group "dragout" (fn [e]
+        (set! (-> e .-dropTargetItem .-element .-style .-outlineColor) "rgba(255,255,255,0.3")))
+      (events/listen releases-dnd-group "dragend" (fn [e]
+        (.remove (.-classList dropzone) "dropzone")
+        (set! (-> e .-dragSourceItem .-element .-style .-opacity) 1)))))
 
 (defn release
   "Release component"
@@ -38,7 +40,7 @@
     om/IDidMount
     (did-mount [_]
       ; add to dragdropgroup
-      (.addItem releasesgroup (om/get-node owner "release") img)
+      (.addItem releases-dnd-group (om/get-node owner "release") img)
     )
     om/IRender
     (render [_]
@@ -48,13 +50,11 @@
 (defn init
   "Library (right) sidebar component"
   [{:keys [whos mostlistened files] :as releases} owner]
-  (let [releasesgroup (goog.fx.DragDropGroup.)]
     (reify
       om/IDidMount
       (did-mount [_]
         ;(rightkey-show-catalogue)
-        (drag-drop releasesgroup)
-      )
+        (init-drag-drop))
       om/IRender
       (render [_]
           (html [:aside.catalogue
@@ -65,4 +65,4 @@
                                   {:key :id :opts {:releasesgroup releasesgroup}})
                     (if (not= (count files) 0)
                       [:h3 "folders"])
-                  ]])))))
+                  ]]))))

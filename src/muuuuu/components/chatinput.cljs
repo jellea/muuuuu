@@ -45,20 +45,19 @@
 (defn init
   "Chatroom input field component"
   [state owner]
-  (if (> (count (get-active-rooms (:rooms state))) 0)
   (let [current (current-room (:rooms state)) roomname (str (first current))]
     (reify
       om/IRender
       (render [_]
-        (html [:div.chatinput
-                [:form {:onSubmit #(send-message % state roomname owner)}
-                  [:div {:className
-                      (str "name" (if (:bright (:color (second current)) true) "" " bright"))}
-                    [:a#yourname {:onKeyDown #(change-name % owner state roomname)
-                                  :contentEditable true :ref "yourname"} (:yourname state)]]
-                  [:input#yourmsg.yourmessage {:type "text" :ref "yourmessage"
-                                             :placeholder "Your Message"}]
-                  [:input {:type "submit" :value "Send!"}]
-              ]]))))
-  (om/component
-    (html [:div ""]))))
+        (html [:form#chatinput
+                (if (= (count (get-active-rooms (:rooms state))) 0)
+                  {:style {:display "none"}}
+                  {:onSubmit #(send-message % state roomname owner)})
+                [:div {:className
+                    (str "name" (if (:bright (:color (second current)) true) "" " bright"))}
+                  [:a#yourname {:onKeyDown #(change-name % owner state roomname)
+                                :contentEditable true :ref "yourname"} (:yourname state)]]
+                [:input#yourmsg.yourmessage {:type "text" :ref "yourmessage"
+                                           :placeholder "Your Message"}]
+                [:input {:type "submit" :value "Send!"}]
+              ])))))

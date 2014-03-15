@@ -5,6 +5,7 @@
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [muuuuu.events.user-events]
+            [muuuuu.components.catalogue]
             [clojure.string :refer [trim]]
             [muuuuu.controllers.notifications :as notify]
             [sablono.core :as html :refer-macros [html]]
@@ -103,7 +104,8 @@
 
         (if (= title "create new room")
           (let [htmlelement (om/get-node owner "title")]
-            (.focus htmlelement))))
+            (.focus htmlelement)))
+        (muuuuu.components.catalogue.add-new-target title muuuuu.components.catalogue.releases-dnd-group))
       om/IRender
       (render [_]
         (html [:section.chatroom {:data-panel title
@@ -121,6 +123,7 @@
                     [:a {:onClick #(change-color title state)} "color"]
                     [:a "backlog"]]]
                 [:div.chatcontainer
+                  {:id title} ; needed for dnd
                   (om/build messages (reverse (take 15 (reverse msgs))) {:opts {:state state :roomname title}})
                   (if (:inviewport (second data))
                     [:ul.userlist

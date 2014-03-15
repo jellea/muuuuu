@@ -87,7 +87,7 @@ input {
   min-width: 1em;
   max-width: 1em;
 }
-.container .catalogue:hover ~ .chatinput form {
+.container .catalogue:hover ~ #chatinput {
   left: 35px;
   right: 500px;
 }
@@ -113,7 +113,7 @@ input {
   min-width: 1em !important;
   max-width: 1em !important;
 }
-.container .catalogue.show ~ .chatinput form {
+.container .catalogue.show ~ #chatinput {
   left: 35px !important;
   right: 500px !important;
 }
@@ -128,12 +128,12 @@ input {
   min-width: 13.3em;
   max-width: 13.3em;
 }
-.container .sidebar:hover ~ .chatinput form {
+.container .sidebar:hover ~ #chatinput {
   left: 14.8em;
 }
 .container .catalogue,
 .container .sidebar,
-.container .chatinput form,
+.container #chatinput,
 .container .release,
 .container h2,
 .container h3,
@@ -281,16 +281,15 @@ input {
   display: -webkit-flex;
   position: absolute;
   height: auto;
-  bottom: 5em;
+  bottom: 6em;
   top: 4em;
-  padding: 1em 30px 1em 0;
-  width: 100%;
+  margin: 1em 0 1em 0;
 }
 .container .chat section .chatcontainer:hover > .userlist {
   opacity: 1;
 }
 .container .chat section .chatcontainer .messages {
-  min-width: 500px;
+  width: 50em;
   overflow: hidden;
   height: auto;
   flex: 1 1 auto;
@@ -298,8 +297,8 @@ input {
 .container .chat section .chatcontainer .userlist {
   float: right;
   opacity: 0;
-  margin-right: 5em;
   overflow: scroll;
+  width: 12em;
   height: auto;
   transition: all 0.5s ease-in;
 }
@@ -347,22 +346,22 @@ input {
 .chat .bright .self .content {
   border: 1px solid #fff;
 }
-.chatinput form {
+#chatinput {
   display: -webkit-flex;
   position: fixed;
   bottom: 2em;
   left: 14.5em;
-  right: 5em;
+  right: 3.5em;
 }
-.chatinput form div.bright a {
+#chatinput div.bright a {
   color: #fff;
 }
-.chatinput form .name {
+#chatinput .name {
   transition: color 0.4s ease-in;
   min-width: 8em;
   padding-top: 0.8em;
 }
-.chatinput form input[type=text] {
+#chatinput input[type=text] {
   flex: 1 1 auto;
   max-width: 40em;
   background-color: rgba(255,255,255,0.9);
@@ -370,7 +369,7 @@ input {
   padding: 0.8em;
   outline: none;
 }
-.chatinput form input[type=submit] {
+#chatinput input[type=submit] {
   display: none;
 }
 .catalogue h2 {
@@ -388,7 +387,7 @@ input {
   padding: 1em;
 }
 .catalogue .releases .release {
-  margin: -4px;
+  margin: 0px;
   width: 200px;
   height: 200px;
   overflow: hidden;
@@ -446,4 +445,33 @@ input {
   width: 100%;
   z-index: 10;
   background-color: rgba(0,0,0,0.5);
+}
+#app.dropzone .chatcontainer,
+#app.dropzone #chatinput {
+  outline: 3px dashed;
+  outline-offset: 8px;
+}
+#app.dropzone .chatcontainer:after {
+  position: absolute;
+  content: "Drop here to throw music into the room";
+  top: 50%;
+  right: 50%;
+  margin-right: -11em;
+  margin-top: -1em;
+  font-size: 1.1em;
+  background-color: #111;
+  color: #fff;
+  padding: 0.5em;
+}
+#app.dropzone #chatinput:after {
+  position: absolute;
+  content: "Drop here to attach the music to a message";
+  top: 50%;
+  right: 50%;
+  margin-right: -11em;
+  margin-top: -1em;
+  font-size: 1.1em;
+  background-color: #111;
+  color: #fff;
+  padding: 0.5em;
 }
