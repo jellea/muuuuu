@@ -1,6 +1,5 @@
 (ns muuuuu.components.chatwindow
   (:require [goog.events :as events]
-            [goog.events.KeyHandler]
             [goog.History]
             [clojure.set :refer [rename-keys]]
             [om.core :as om :include-macros true]
@@ -17,7 +16,6 @@
   "Show the catalogue of a User"
   [e user owner]
   (.log js/console user)
-  ; Switch to different library
   (.text (js/$ ".catalogue h2") user)
   (.addClass (js/$ ".catalogue") "show")
   (.setTimeout js/window #(.removeClass (js/$ ".catalogue") "show"), 1000)
@@ -46,10 +44,8 @@
   (reify
     om/IDidUpdate
     (did-update [_ _ _]
-      ; scroll messages to the bottom
       ; TODO if scrolled up, don't scroll down
       (set! (.-scrollTop (.getDOMNode owner)) 1000000)
-      ;(.log js/console owner)
     )
     om/IRender
     (render [_]
@@ -70,11 +66,20 @@
   (om/transact! state #(assoc-in %1 [room :active] false)))
 
 (defn rename-room
-  [e title state]
-  ; TODO bug - panelsnap breaks
-  (.setToken muuuuu.events.user-events/history title)
-  (om/transact! state
-    #(rename-keys %1 {"create new room" title})))
+  [e owner state]
+  (let [htmlelement (.-target e)
+        roomname (.-innerText htmlelement)]
+    (when (= roomname "Create New Room")
+      (do (set! (.-innerText htmlelement) "")))
+
+    (when (= (.-keyCode e) 13)
+      (.preventDefault e)
+      (if (not= roomname "Create New Room")
+        (do
+          (.setToken muuuuu.events.user-events/history roomname)
+          (om/transact! state
+          #(rename-keys %1 {"create new room" (trim (.-innerText htmlelement))}))
+      false)))))
 
 (defn toggle-notifications
   [e title state]
@@ -99,18 +104,7 @@
 
         (if (= title "create new room")
           (let [htmlelement (om/get-node owner "title")]
-            (.focus htmlelement)
-            (let [handler (events/KeyHandler. htmlelement)]
-              (events/listen handler
-                "key" (fn [e]
-                  (when (= (.-innerText htmlelement) "Create New Room")
-                    (do (set! (.-innerText htmlelement) "")))
-                  (when (= (.-keyCode e) 13); ENTER key
-                    (do (.preventDefault e)
-                      (if (not= (.-innerText htmlelement) "Create New Room")
-                        (rename-room e (trim (.-innerText htmlelement)) state)) false))))))
-        )
-      )
+            (.focus htmlelement))))
       om/IRender
       (render [_]
         (html [:section.chatroom {:data-panel title
@@ -119,6 +113,7 @@
                 [:h2
                   [:span.title
                     {:contentEditable (if (= title "create new room") true)
+                     :onKeyDown #(rename-room % owner state)
                      :ref "title"}
                     title]
                   [:span.options

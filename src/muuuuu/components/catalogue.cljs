@@ -2,10 +2,10 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [goog.events :as events]
-            [goog.fx :refer [DragDrop DragDropGroup]]
+            [goog.fx]
             [goog.fx.DragDrop]
             [goog.fx.DragDropGroup]
-            [muuuuu.events.user-events :refer [rightkey-show-catalogue]]
+            [muuuuu.events.user_events :refer [rightkey-show-catalogue]]
             [sablono.core :as html :refer-macros [html]]
             ))
 
@@ -29,13 +29,6 @@
       (fn [e] (prn "dragover")
               ; set .chatmessages to darker red
         ))
-
-  ;'dragover'
-  ;'dragout'
-  ;'drag' > .chatmessage and input naar rood + 
-  ;'drop'
-  ;'dragstart'
-  ;'dragend'
 )
 
 (defn release
@@ -44,6 +37,7 @@
   (reify
     om/IDidMount
     (did-mount [_]
+      ; add to dragdropgroup
       (.addItem releasesgroup (om/get-node owner "release") img)
     )
     om/IRender
@@ -51,20 +45,15 @@
     (html [:div.release {:ref "release"}
             [:img {:src img}]]))))
 
-
 (defn init
   "Library (right) sidebar component"
-  [{:keys [whos mostlistened] :as releases} owner]
+  [{:keys [whos mostlistened files] :as releases} owner]
   (let [releasesgroup (goog.fx.DragDropGroup.)]
     (reify
       om/IDidMount
       (did-mount [_]
-        (rightkey-show-catalogue)
+        ;(rightkey-show-catalogue)
         (drag-drop releasesgroup)
-      )
-      om/IDidUpdate
-      (did-update [_ _ _]
-        (.log js/console drag)
       )
       om/IRender
       (render [_]

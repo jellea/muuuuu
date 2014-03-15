@@ -1,5 +1,5 @@
 (defproject muuuuu "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
+  :description "working title - p2p music filesharing in the webbrowser!"
   :url "http://example.com/FIXME"
 
   :dependencies [[org.clojure/clojure "1.5.1"]

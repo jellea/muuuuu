@@ -3,7 +3,6 @@
             [om.dom :as dom :include-macros true]
             [clojure.string]
             [goog.events :as events]
-            [goog.events.KeyHandler]
             [sablono.core :as html :refer-macros [html]]
             [muuuuu.utils :refer [guid get-active-rooms current-room]]))
 
@@ -18,30 +17,21 @@
   [& nodes]
   (doall (map #(set! (.-value %) "") nodes)))
 
-; Structure (element.classname - componentname)
-; div.chat - allrooms
-;   section.chatroom - room
-;     h2
-;     div.chatcontainer
-
 (defn change-name
   "Change user name"
   [e owner state roomname]
-  (let [elem (om/get-node owner "yourname")
-        handler (events/KeyHandler. elem)
+  (let [elem (.-target e)
         prevname (.-innerText elem)]
-      (events/listen handler
-        "key" (fn [e] (when (= (.-keyCode e) 13); ENTER key
-          (do (.preventDefault e)
-              (.blur elem)
-              (om/transact! state
-                #(-> %
-                   (assoc-in [:yourname] (.-innerText elem))
-                   (assoc-in [:rooms roomname :msgs]
-                     [{:sender "muuuuu" :content (str "You changed your name to " (.-innerText elem)) :msg-type "action"}])
-                   ))
-              false))))))
-
+    (when (= (.-keyCode e) 13); ENTER key
+      (do (.preventDefault e)
+          (.blur elem)
+          (om/transact! state
+            #(-> %
+               (assoc-in [:yourname] (.-innerText elem))
+               (assoc-in [:rooms roomname :msgs]
+                 [{:sender "muuuuu" :content (str "You changed your name to " (.-innerText elem)) :msg-type "action"}])
+               ))
+              false))))
 
 (defn send-message
   [e state roomname owner]
@@ -58,17 +48,13 @@
   (if (> (count (get-active-rooms (:rooms state))) 0)
   (let [current (current-room (:rooms state)) roomname (str (first current))]
     (reify
-      om/IDidMount
-      (did-mount [_]
-        ; change name listener
-      )
       om/IRender
       (render [_]
         (html [:div.chatinput
                 [:form {:onSubmit #(send-message % state roomname owner)}
                   [:div {:className
                       (str "name" (if (:bright (:color (second current)) true) "" " bright"))}
-                    [:a#yourname {:onClick #(change-name % owner state roomname)
+                    [:a#yourname {:onKeyDown #(change-name % owner state roomname)
                                   :contentEditable true :ref "yourname"} (:yourname state)]]
                   [:input#yourmsg.yourmessage {:type "text" :ref "yourmessage"
                                              :placeholder "Your Message"}]

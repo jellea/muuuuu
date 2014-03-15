@@ -8,23 +8,32 @@
 (enable-console-print!)
 
 (defn rand-action [state]
-  (let [lorem (goog.text.LoremIpsum.)
-        sentence (.generateSentence lorem)
-        randroom (rand-nth (keys (get-active-rooms (:rooms @state))))
-        randuser (rand-nth (get-in @state [:rooms randroom :users]))
+  (let [lorem     (goog.text.LoremIpsum.)
+        sentence  (.generateSentence lorem)
+        randroom  (rand-nth (keys (get-active-rooms (:rooms @state))))
+        randuser  (rand-nth (get-in @state [:rooms randroom :users]))
         normalmsg {:sender randuser :content sentence :msg-type "text"}
-        mention {:sender randuser :content (str "@" (:yourname @state) " are you paying attention?") :msg-type "text"}
-        listening {:sender randuser :content (str "is listening to " (first (usernames)) "- Track " (rand-int 22) " // Listen") :msg-type "action"}
-        msg (rand-nth (into [listening mention] (for [i (range 10)] normalmsg)))]
+        mention   {:sender randuser
+                   :content (str "@" (:yourname @state) " are you paying attention?") :msg-type "text"}
+        listening {:sender randuser
+                   :content (str "is listening to " (first (usernames)) "- Track " (rand-int 22) "    Listen")
+                   :msg-type "action"}
+        msg       (rand-nth (into [listening mention] (for [i (range 10)] normalmsg)))]
 
     (if (and (not (nil? randroom)) (not (nil? randuser)))
       (om/transact! state [:rooms randroom :msgs]
           (fn [msgs] (conj msgs msg))))))
 
-(def genrelist (list "acoustic" "ambient" "blues" "classical" "country" "electronic" "emo" "folk" "hardcore" "hip hop" "indie" "jazz" "latin" "metal" "pop" "pop punk" "punk" "reggae" "rnb" "rock" "soul" "world" "60s" "70s" "80s" "90s" ))
+(def genrelist (list "acoustic" "ambient" "blues" "classical" "country" "electronic" "emo" "folk" "hardcore"
+                     "hip hop" "indie" "jazz" "latin" "metal" "pop" "pop punk" "punk" "reggae" "rnb" "rock"
+                     "soul" "world" "60s" "70s" "80s" "90s" ))
 
-(defn usernames [] (vec (filter #(= (rand-int 2) 1) ["Ryoji Ikeda" "Porter Ricks" "Miles Davis" "Four Tet" "Kevin Drumm" "Nathan Fake" "Jimi Hendrix" "Alva Noto" "Speedy J" "Aphex Twin" "Mike Dehnert" "Luke Abbott" "John Coltrane" "Oren Ambarchi" "William Basinski" "Thom Yorke" "Anton Webern"
-                                                     "Kangding Ray" "Electric Wizard" "Frédéric Chopin"])))
+(defn usernames [] (vec (filter #(= (rand-int 2) 1) ["Ryoji Ikeda" "Porter Ricks" "Miles Davis" "Four Tet"
+                                                     "Kevin Drumm" "Nathan Fake" "Jimi Hendrix" "Alva Noto"
+                                                     "Speedy J" "Aphex Twin" "Mike Dehnert" "Luke Abbott"
+                                                     "John Coltrane" "Oren Ambarchi" "William Basinski"
+                                                     "Thom Yorke" "Anton Webern" "Kangding Ray"
+                                                     "Electric Wizard" "Frédéric Chopin"])))
 
 (def albumcovers (for [i (range 1 12)] {:img (str "/resources/img/covers/" i ".jpg") :id (guid)}))
 

@@ -22,13 +22,13 @@
 (defn add-channel
   "Puts a new channel in the app-state"
   [title rooms]
-  (let [newroom (if (= title "create new room") true)
+  (let [newroom      (if (= title "create new room") true)
         stnd-message (if-not newroom {:sender "muuuuu", :msg-type "action"
                                       :content (str "You just joined " title), :id (guid)})
-        room {:color (get-next-color) :active true :connected (if-not newroom true false)
-              :order (count (get-active-rooms @rooms))
-              :inviewport false :id (guid) :users (if-not newroom (usernames))
-              :msgs [stnd-message]}]
+        room         {:color (get-next-color) :active true :connected (if-not newroom true false)
+                      :order (count (get-active-rooms @rooms))
+                      :inviewport false :id (guid) :users (if-not newroom (usernames))
+                      :msgs [stnd-message]}]
 
     (om/transact! rooms
       (fn [rooms] (assoc rooms title room)))))
@@ -46,7 +46,7 @@
                              (if (true? (:unread room)) "unread") " "
                              (if (true? (:inviewport room)) "active"))
              :style  #js {:borderColor (str "#" (:hex color))
-                        :backgroundColor (str "#" (:hex color))}}
+                          :backgroundColor (str "#" (:hex color))}}
             [:a title]
           ]))))
 
@@ -55,12 +55,9 @@
   [data owner opts]
   (om/component
       (html [:li {:onClick #(add-channel (first data) opts)}
-              [:a
-                (first data)
+              [:a (first data)
                 [:span.count (:usercount (second data))]
             ]])))
-
-
 
 (defn init
   "Room list sidebar component"
@@ -74,8 +71,7 @@
                     [:a {:onClick #(add-channel "create new room" rooms) :title "Create new room"} " +"]]])
               [:ul.joinchatmenu
                 (om/build-all joinedchannel
-                    (sort-by #(:order (second %)) (get-active-rooms rooms))
-                             {:key :id})]
+                    (sort-by #(:order (second %)) (get-active-rooms rooms)) {:key :id})]
               [:ul
                 [:li.header "Popular rooms"]]
               [:ul.popularchatmenu
