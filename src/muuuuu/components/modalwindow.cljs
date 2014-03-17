@@ -5,15 +5,17 @@
             [sablono.core :as html :refer-macros [html]]))
 
 (defn hide-modal [state]
-  ; TODO sets state, but no update..
-  (om/set-state! state :hidden true))
+  (om/transact! state #(assoc % :hidden true)))
 
-(defn modal [state owner]
+(defn modal
+  "Modal component"
+  [state owner]
   (om/component
     (html (if (false? (:hidden state))
           [:div.modal
             [:div.inner
-              [:h3 "title"]
-              [:p "text"]]
-            [:div.mask {:onClick #(hide-modal owner)} ""]
+             (if (:component state)
+               (om/build (:component state) nil)
+               (html [:h3 "title"][:p "text"]))]
+            [:div.mask {:onClick #(hide-modal state)} ""]
            ] [:div]))))

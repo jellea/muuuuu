@@ -33,8 +33,17 @@
       (events/listen releases-dnd-group "dragend" (fn [e]
         (.remove (.-classList dropzone) "dropzone")
         (set! (-> e .-dragSourceItem .-element .-style .-opacity) 1)))
-      (events/listen releases-dnd-group "drop" (fn [e]
-        #(prn e)))))
+
+(defn test-modal []
+  (om/component
+    (html [:div [:h3 "add music"]
+                [:p "Soon you will be able to connect your soundcloud, bandcamp, whatsover"]
+                [:])))
+
+(defn show-add-modal [state]
+  (om/transact! state
+    #(assoc % :modal {:hidden false :component test-modal})
+  ))
 
 (defn release
   "Release component"
@@ -61,7 +70,10 @@
       om/IRender
       (render [_]
           (html [:aside.catalogue
-                  [:h2 whos]
+                  [:h2
+                    [:span.name whos]
+                    [:a.add {:onClick #(show-add-modal state)} "add"]
+                  ]
                   [:div.releases
                     (if (not= (count mostlistened) 0) [:h3 "most listened"])
                     (om/build-all release (take 8 mostlistened)
