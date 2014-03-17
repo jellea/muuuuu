@@ -4,7 +4,7 @@ drophint()
   right                       50%
   margin-top                  -1.1em
   font-size                   1.2em
-  background-color            #111
+  background-color            #222
   color                       #fff
   padding                     0.5em
 
@@ -12,13 +12,14 @@ drophint()
   .chatcontainer, #chatinput
     outline                   3px dashed
     outline-offset            8px
-    background-color          rgba(255,255,255,0.1)
-    filter                    blur(5px)
+
+    > div, input
+      -webkit-filter                    blur(2px)
 
   .chatcontainer:after
     content                   "Drop here to throw music into the room"
     drophint()
-    margin-right              -11em
+    margin-right              -10em
 
   #chatinput:after
     content                   "Drop here to attach the music to a message"

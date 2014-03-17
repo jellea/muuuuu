@@ -28,10 +28,9 @@
           (om/transact! state
             #(-> %
                (assoc-in [:yourname] (.-innerText elem))
-               (assoc-in [:rooms roomname :msgs]
-                 [{:sender "muuuuu" :content (str "You changed your name to " (.-innerText elem)) :msg-type "action"}])
-               ))
-              false))))
+               (update-in [:rooms roomname :msgs]
+                 conj {:sender "muuuuu" :content (str "You changed your name to " (.-innerText elem)) :msg-type "action"})))
+          false))))
 
 (defn send-message
   [e state roomname owner]

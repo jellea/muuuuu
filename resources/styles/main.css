@@ -377,6 +377,12 @@ input {
   padding: 0.4em;
   color: #fff;
 }
+.catalogue h2 .add {
+  margin-left: 8em;
+  font-size: 0.5em;
+  line-height: 2.5em;
+  font-weight: normal;
+}
 .catalogue .releases {
   width: 450px;
   overflow: hidden;
@@ -450,8 +456,12 @@ input {
 #app.dropzone #chatinput {
   outline: 3px dashed;
   outline-offset: 8px;
-  background-color: rgba(255,255,255,0.1);
-  filter: blur(5px);
+}
+#app.dropzone .chatcontainer > div,
+#app.dropzone #chatinput > div,
+#app.dropzone .chatcontainer input,
+#app.dropzone #chatinput input {
+  -webkit-filter: blur(2px);
 }
 #app.dropzone .chatcontainer:after {
   content: "Drop here to throw music into the room";
@@ -460,10 +470,10 @@ input {
   right: 50%;
   margin-top: -1.1em;
   font-size: 1.2em;
-  background-color: #111;
+  background-color: #222;
   color: #fff;
   padding: 0.5em;
-  margin-right: -11em;
+  margin-right: -10em;
 }
 #app.dropzone #chatinput:after {
   content: "Drop here to attach the music to a message";
@@ -472,7 +482,7 @@ input {
   right: 50%;
   margin-top: -1.1em;
   font-size: 1.2em;
-  background-color: #111;
+  background-color: #222;
   color: #fff;
   padding: 0.5em;
   margin-right: -11em;

@@ -24,17 +24,17 @@
 
 (defn message
   "Single message component"
-  [{:keys [sender msg-type content] :as msg} owner opts]
+  [{:keys [sender msg-type content] :as msg} owner {:keys [roomname state] :as opts}]
   (reify
     om/IDidMount
     (did-mount [_]
-      (notify/on-mention msg (:roomname opts))
+      (notify/on-mention msg roomname)
     )
     om/IRender
     (render [_]
       (html [:div {:className (str "message " msg-type)}
               [:div.sender
-                [:a (if (not= sender "You"){:onClick #(show-lib % sender owner)})
+                [:a (if (not= sender "You"){:onClick #(show-lib % sender state)})
                  sender]]
               [:div.content content]
           ]))))
@@ -52,7 +52,7 @@
     (render [_]
       (html [:div.messages
         (if-not (= data [nil]) ; prevents a new room from showing a stripe
-          (om/build-all message data {:key :id :opts {:roomname roomname}})
+          (om/build-all message data {:key :id :opts {:roomname roomname :state state}})
           nil)]))))
 
 (defn user
@@ -82,7 +82,7 @@
       false)))))
 
 (defn toggle-notifications
-  [e title state]
+  [e title]
   (reset! notify/state {:title "muuuuu" :message "Notifications are turned on"}))
 
 (defn change-color
@@ -99,13 +99,12 @@
       (did-mount [_]
         ; jump to chatroom on mount
         (.panelSnap (js/$ ".chat") "snapToPanel"
-          (js/$ (str "[data-panel=\"" title "\"]"))
-        )
-
+          (js/$ (str "[data-panel=\"" title "\"]")))
         (if (= title "create new room")
           (let [htmlelement (om/get-node owner "title")]
             (.focus htmlelement)))
-        (muuuuu.components.catalogue.add-new-target title muuuuu.components.catalogue.releases-dnd-group))
+        (muuuuu.components.catalogue.add-new-target title
+            muuuuu.components.catalogue.releases-dnd-group))
       om/IRender
       (render [_]
         (html [:section.chatroom {:data-panel title
@@ -154,7 +153,7 @@
     (did-mount [_]
       (.panelSnap (js/$ ".chat")
                   #js {:$menu (js/$ ".joinchatmenu")
-                       :slideSpeed 200
+                       :slideSpeed 250
                        :menuSelector "li"})
 
       (muuuuu.events.user-events.up-and-down-keys)
@@ -177,9 +176,7 @@
               (let [prev (first (current-room rooms))]
               (-> rooms
                 (assoc-in [prev :inviewport] false)
-                (assoc-in [roomtitle :inviewport] true))
-              )))))
-    ))
+                (assoc-in [roomtitle :inviewport] true)))))))))
     om/IRender
     (render [_]
       (html [:div#chat.chat

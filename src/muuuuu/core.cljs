@@ -2,15 +2,16 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [muuuuu.mock]
-            [muuuuu.components.chatwindow]
-            [muuuuu.components.roomlist]
-            [muuuuu.components.catalogue]
-            [muuuuu.components.chatinput]
-            [muuuuu.components.musicplayer]
+            [muuuuu.dispatch :as dispatch]
+            [muuuuu.components.chatwindow :as chatwindow]
+            [muuuuu.components.roomlist :as roomlist]
+            [muuuuu.components.catalogue :as catalogue]
+            [muuuuu.components.chatinput :as chatinput]
+            [muuuuu.components.musicplayer :as musicplayer]
+            [muuuuu.components.modalwindow :as modalwindow]
             [muuuuu.events.user_events]
             [goog.debug :as debug]
             [goog.debug.FpsDisplay]
-            [muuuuu.components.modalwindow]
             [muuuuu.utils :refer [guid get-next-color]]
             ))
 
@@ -24,10 +25,10 @@
   (atom {:yourname (str "Guest" (rand-int 9999))
          :yourlib []
          :rooms muuuuu.mock.make-roomslist
-         :player {:tracknumber 11
-                  :tracktitle "Treblinka"
-                  :artist "Pig Destroyer"
-                  :album "Prowler on the streets"}
+         :player {:tracknumber "Nothing playing at the moment"
+                  :tracktitle ""
+                  :artist ""
+                  :album ""}
          :modal {:hidden true}
          :catalogue {:whos "Your Library"
                      :mostlistened muuuuu.mock.albumcovers
@@ -47,12 +48,12 @@
     om/IRender
     (render [_]
       (dom/div #js {:className "container"}
-        (om/build muuuuu.components.chatwindow.init (:rooms state))
-        (om/build muuuuu.components.catalogue.init (:catalogue state))
-        (om/build muuuuu.components.roomlist.init (:rooms state))
-        (om/build muuuuu.components.chatinput.init state)
-        (om/build muuuuu.components.modalwindow.modal (:modal state))
-        (om/build muuuuu.components.musicplayer.init (:player state))))))
+        (om/build chatwindow/init (:rooms state))
+        (om/build catalogue/init (:catalogue state) {:opts {:state state}})
+        (om/build roomlist/init (:rooms state))
+        (om/build chatinput/init state)
+        (om/build modalwindow/modal (:modal state))
+        (om/build musicplayer/init (:player state))))))
 
 (om/root
   container

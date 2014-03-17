@@ -15,30 +15,31 @@
   (let [new-target (goog.fx.DragDrop. elemid)]
     (.init new-target)
     (set! (.-outlineColor (.-style (.getElementById js/document elemid))) "rgba(255,255,255,0.3")
-    (.addTarget elemgroup new-target)
+    (.addTarget elemgroup new-target new-target)
     (.init elemgroup)))
 
 (defn init-drag-drop
   "Initiate drag and drop listeners group"
-  []
+  [state]
+    ; TODO BUG: target frames are misaligned after shifting of .chat div.
     (add-new-target "chatinput" releases-dnd-group)
     (let [dropzone (.getElementById js/document "app")]
+      (events/listen releases-dnd-group "drop" #(prn))
       (events/listen releases-dnd-group "dragstart" (fn [e]
         (.add (.-classList dropzone) "dropzone")
         (set! (-> e .-dragSourceItem .-element .-style .-opacity) 0.3)))
       (events/listen releases-dnd-group "dragover" (fn [e]
-        (set! (-> e .-dropTargetItem .-element .-style .-outlineColor) "rgba(255,255,255,0.8)")))
+        (set! (-> e .-dropTargetItem .-element .-style .-outlineColor) "rgba(255,255,255,1)")))
       (events/listen releases-dnd-group "dragout" (fn [e]
         (set! (-> e .-dropTargetItem .-element .-style .-outlineColor) "rgba(255,255,255,0.3)")))
       (events/listen releases-dnd-group "dragend" (fn [e]
         (.remove (.-classList dropzone) "dropzone")
-        (set! (-> e .-dragSourceItem .-element .-style .-opacity) 1)))
+        (set! (-> e .-dragSourceItem .-element .-style .-opacity) 1)))))
 
 (defn test-modal []
   (om/component
     (html [:div [:h3 "add music"]
-                [:p "Soon you will be able to connect your soundcloud, bandcamp, whatsover"]
-                [:])))
+                [:p "Soon you will be able to connect your soundcloud, bandcamp, whatsover"]])))
 
 (defn show-add-modal [state]
   (om/transact! state
@@ -61,12 +62,12 @@
 
 (defn init
   "Library (right) sidebar component"
-  [{:keys [whos mostlistened files] :as releases} owner]
+  [{:keys [whos mostlistened files] :as releases} owner {:keys [state] :as opts}]
     (reify
       om/IDidMount
       (did-mount [_]
         ;(rightkey-show-catalogue)
-        (init-drag-drop))
+        (init-drag-drop state))
       om/IRender
       (render [_]
           (html [:aside.catalogue
