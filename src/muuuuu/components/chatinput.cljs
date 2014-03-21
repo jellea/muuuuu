@@ -27,7 +27,7 @@
           (.blur elem)
           (om/transact! state
             #(-> %
-               (assoc-in [:yourname] (.-innerText elem))
+               (assoc :yourname (.-innerText elem))
                (update-in [:rooms roomname :msgs]
                  conj {:sender "muuuuu" :content (str "You changed your name to " (.-innerText elem)) :msg-type "action"})))
           false))))

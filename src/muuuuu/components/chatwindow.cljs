@@ -5,6 +5,7 @@
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [muuuuu.events.user-events]
+            [muuuuu.mock :as mock]
             [muuuuu.components.catalogue]
             [clojure.string :refer [trim]]
             [muuuuu.controllers.notifications :as notify]
@@ -15,9 +16,8 @@
 
 (defn show-lib
   "Show the catalogue of a User"
-  [e user owner]
-  (.log js/console user)
-  (.text (js/$ ".catalogue h2") user)
+  [e user state]
+  (om/transact! state #(assoc % :catalogue {:whos user :mostlistened mock/albumcovers}))
   (.addClass (js/$ ".catalogue") "show")
   (.setTimeout js/window #(.removeClass (js/$ ".catalogue") "show"), 1000)
 )
@@ -57,13 +57,13 @@
 
 (defn user
   "User component"
-  [user owner]
+  [user owner {:keys [state] :as opts}]
   (om/component
-    (html [:li {:onClick #(show-lib % user owner)} user])))
+    (html [:li {:onClick #(show-lib % user state)} user])))
 
 (defn delete-room
   [room state]
-  (om/transact! state #(assoc-in %1 [room :active] false)))
+  (om/transact! state [:rooms] #(assoc-in %1 [room :active] false)))
 
 (defn rename-room
   [e owner state]
@@ -71,14 +71,13 @@
         roomname (.-innerText htmlelement)]
     (when (= roomname "Create New Room")
       (do (set! (.-innerText htmlelement) "")))
-
     (when (= (.-keyCode e) 13)
       (.preventDefault e)
       (if (not= roomname "Create New Room")
         (do
           (.setToken muuuuu.events.user-events/history roomname)
-          (om/transact! state
-          #(rename-keys %1 {"create new room" (trim (.-innerText htmlelement))}))
+          (om/transact! state [:rooms]
+            #(rename-keys %1 {"create new room" (trim (.-innerText htmlelement))}))
       false)))))
 
 (defn toggle-notifications
@@ -87,7 +86,7 @@
 
 (defn change-color
   [room state]
-  (om/transact! state #(assoc-in %1 [room :color] (get-next-color))))
+  (om/transact! state [:rooms] #(assoc-in %1 [room :color] (get-next-color))))
 
 (defn room
   "Single room component"
@@ -129,9 +128,7 @@
                       [:li.header "Users"
                         [:span.count (str" (" (count users) ")")]]
                       [:li "You"]
-                      (om/build-all user users)])
-                 ]
-              ])))))
+                      (om/build-all user users {:opts {:state state}})])]])))))
 
 (defn intro
   "Intro component"
@@ -147,7 +144,7 @@
 
 (defn init
   "Chatrooms container component"
-  [rooms owner]
+  [rooms owner {:keys [state]}]
   (reify
     om/IDidMount
     (did-mount [_]
@@ -166,8 +163,7 @@
 
           ; skip focus to chatinput and focus title if new room
           (if (not= "create new room" roomtitle)
-            (.focus (. js/document (getElementById "yourmsg")))
-          )
+            (.focus (. js/document (getElementById "yourmsg"))))
 
           (.setToken muuuuu.events.user-events/history roomtitle)
 
@@ -185,5 +181,4 @@
                 )
               (om/build-all room
                 (sort-by #(:order (second %)) (get-active-rooms rooms))
-                {:key :id :opts {:state rooms}})
-            ]))))
+                {:key :id :opts {:state state}})]))))

@@ -4,6 +4,8 @@
             [goog.events :as events]
             [goog.fx]
             [goog.fx.DragDrop]
+            [goog.fs]
+            [goog.fs.FileReader]
             [goog.fx.DragDropGroup]
             [muuuuu.events.user_events :refer [rightkey-show-catalogue]]
             [sablono.core :as html :refer-macros [html]]
@@ -46,6 +48,20 @@
     #(assoc % :modal {:hidden false :component test-modal})
   ))
 
+(defn back-to-lib [state]
+  (om/transact! state
+    #(assoc % :catalogue {:whos "Your Library"})))
+
+(defn press-play [file]
+  (.file (:file @file) (fn [blob]
+    (let [player (. js/document (getElementById "audioplayer"))
+          reader (js/FileReader.)]
+      (set! (.-onload reader) (fn [e]
+         (.log js/console e)
+         (set! (.-src player) (.-result (.-target e)))
+         (.play player nil)))
+      (.readAsDataURL reader blob)))))
+
 (defn release
   "Release component"
   [{:keys [img] :as app} owner {:keys [releasesgroup] :as opts}]
@@ -60,25 +76,41 @@
     (html [:div.release {:ref "release"}
             [:img {:src img}]]))))
 
+(defn file-comp
+  "File component"
+  [{:keys [path] :as file} owner {:keys [state] :as opts}]
+  (om/component
+    (html [:li 
+            [:a {:onClick #(press-play file)} "play "]
+            path])))
+
 (defn init
   "Library (right) sidebar component"
-  [{:keys [whos mostlistened files] :as releases} owner {:keys [state] :as opts}]
+  [{:keys [yourlib catalogue]} owner {:keys [state] :as opts}]
     (reify
+      om/IWillMount
+      (will-mount [_]
+        ; Get 'yourlib' from appstate and put in catalogue
+        (if (= (:whos catalogue) "Your Library")
+          (om/transact! catalogue #(merge % (:yourlib state)))))
       om/IDidMount
       (did-mount [_]
-        ;(rightkey-show-catalogue)
         (init-drag-drop state))
       om/IRender
       (render [_]
-          (html [:aside.catalogue
-                  [:h2
-                    [:span.name whos]
-                    [:a.add {:onClick #(show-add-modal state)} "add"]
-                  ]
-                  [:div.releases
-                    (if (not= (count mostlistened) 0) [:h3 "most listened"])
-                    (om/build-all release (take 8 mostlistened)
-                                  {:key :id :opts {:releasesgroup releasesgroup}})
-                    (if (not= (count files) 0)
-                      [:h3 "folders"])
-                  ]]))))
+          (html 
+            [:aside.catalogue
+              [:h2
+                [:span.name (:whos catalogue)]
+                (if (= (:whos catalogue) "Your Library")
+                  [:a.add {:onClick #(show-add-modal state)} "add"]
+                  [:a.add {:onClick #(back-to-lib state)} "< back"])
+              ]
+              [:div.releases
+                  (if (> (count (:mostlistened yourlib)) 0) [:h3 "most listened"])
+                    (om/build-all release (take 8 (:mostlistened yourlib))
+                        {:key :id :opts {:releasesgroup releasesgroup}})
+                  (if (> (count (:files yourlib)) 0)
+                    [:h3 "folders"])
+                    [:ul.files (om/build-all file-comp (:files yourlib) {:opts {:state state}})]
+              ]]))))

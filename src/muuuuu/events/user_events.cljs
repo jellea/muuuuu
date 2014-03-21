@@ -49,8 +49,7 @@
             (.addClass (js/$ ".catalogue") "show")
             false))))))
 
-; FileDrop
-
-(let [handler (events/FileDropHandler. js/document true)]
-  (events/listen handler (-> events/FileDropHandler .-EventType .-DROP)
-      muuuuu.controllers.files.drop-new-files))
+(defn file-drop []
+  (let [handler (events/FileDropHandler. js/document true)]
+    (events/listen handler (-> events/FileDropHandler .-EventType .-DROP)
+        muuuuu.controllers.files.drop-new-files)))

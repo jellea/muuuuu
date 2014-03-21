@@ -323,8 +323,8 @@ input {
   padding: 1em 0 1em 0;
 }
 .chat .message .sender {
-  min-width: 8em;
-  white-space: wrap;
+  width: 8em;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0.2em 0.5em 0.2em 0;
@@ -402,6 +402,10 @@ input {
 .catalogue .releases .release img {
   width: 200px;
   cursor: move;
+}
+.catalogue .releases ul.files {
+  height: 80vh;
+  overflow-y: scroll;
 }
 .musicplayer {
   position: absolute;
