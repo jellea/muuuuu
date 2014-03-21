@@ -15,21 +15,16 @@
     keys))
 
 (defn add-dropped-files-to-state [state]
-  (add-watch files :conj
-    (fn [_ _ _ files] 
+  (add-watch files :conj (fn [_ _ _ files]
       (om/transact! state [:yourlib] #(assoc % :files files)))))
-
-(defn process-file [entry]
-  (let [out (chan)]
-      (put! chan "file")
-    out))
 
 (defn walk-through-tree [filelist]
   (doseq [entry filelist]
     (do
-      (cond (.-isFile entry) (swap! files conj {:file entry :path (.-fullPath entry)})
-            (.-isDirectory entry) (do (let [reader (.createReader entry)]
-                                      (.readEntries reader walk-through-tree)))))))
+      (cond (.-isFile entry) (if (re-find #".mp3" (.-name entry))
+                  (swap! files conj {:file entry :path (.-fullPath entry)}))
+            (.-isDirectory entry) (let [reader (.createReader entry)]
+                                      (.readEntries reader walk-through-tree))))))
 
 (defn drop-new-files [event]
   (let [filelist (-> event .getBrowserEvent .-dataTransfer .-items)]

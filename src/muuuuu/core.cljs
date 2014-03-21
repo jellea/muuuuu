@@ -18,7 +18,6 @@
 
 (enable-console-print!)
 
-
 ;(let [fpsDisplay (debug/FpsDisplay.)]
   ;(.render fpsDisplay (. js/document (getElementById "fpsdisplay"))))
 
@@ -31,8 +30,8 @@
                   :tracktitle ""
                   :artist ""
                   :album ""
-                  :is_playing false
-                  :data_url ""
+                  :is-playing false
+                  :data-url ""
                   :playlist []}
          :modal {:hidden true}
          :catalogue {:whos "Your Library"}}))

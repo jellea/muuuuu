@@ -52,14 +52,17 @@
   (om/transact! state
     #(assoc % :catalogue {:whos "Your Library"})))
 
-(defn press-play [file]
+(defn press-play [file state]
   (.file (:file @file) (fn [blob]
     (let [player (. js/document (getElementById "audioplayer"))
           reader (js/FileReader.)]
       (set! (.-onload reader) (fn [e]
-         (.log js/console e)
-         (set! (.-src player) (.-result (.-target e)))
-         (.play player nil)))
+        (om/transact! state [:player]
+          (fn [player]
+            (merge player
+              {:data-url (.-result (.-target e))
+               :is-playing true
+               :tracknumber (:path @file)})))))
       (.readAsDataURL reader blob)))))
 
 (defn release
@@ -81,7 +84,7 @@
   [{:keys [path] :as file} owner {:keys [state] :as opts}]
   (om/component
     (html [:li 
-            [:a {:onClick #(press-play file)} "play "]
+            [:a {:onClick #(press-play file state)} "play "]
             path])))
 
 (defn init
