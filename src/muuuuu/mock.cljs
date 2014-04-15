@@ -4,6 +4,8 @@
             [muuuuu.utils :refer [get-active-rooms guid]]
             [goog.events :as events]
             [goog.text.LoremIpsum]))
+            [goog.text.LoremIpsum])
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (enable-console-print!)
 
@@ -43,6 +45,7 @@
                  genrelist))))
 
 (defn mock [state]
-  (let [timer (goog/Timer. 2500)]
-    (.start timer)
-    (events/listen timer Timer/TICK #(rand-action state))))
+  (go
+    (while true
+      (<! (timeout 500))
+      (rand-action state))))
