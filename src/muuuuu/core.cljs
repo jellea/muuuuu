@@ -36,13 +36,11 @@
          :modal {:hidden true}
          :catalogue {:whos "Your Library"}}))
 
-;(add-watch app-state :everything #(prn %3))
-
 (defn setup-controllers [state]
   (muuuuu.mock.mock state)
   (muuuuu.events.user_events/file-drop)
-  (files/add-dropped-files-to-state state)
-)
+  ;(muuuuu.garbagecollector/interval state)
+  (files/add-dropped-files-to-state state))
 
 (defn container [state owner]
   (reify
