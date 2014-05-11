@@ -1,4 +1,14 @@
-//@import 'nib'
+@import 'nib'
+
+chanwidth = 17vw
+chanwidthhover = 18vw
+catx = 97vw
+
+//z-index order
+chanz = 10px
+chatz = 100px
+inputz = 1000px
+catz = 10000px
 
 *
   box-sizing                  border-box
@@ -19,7 +29,6 @@ h2
 a
   cursor                      pointer
 
-
 html, body
   margin                      0
   padding                     0
@@ -38,106 +47,116 @@ input
   outline               none
 
 .container
-  display                     flex
-  width                       100%
-  height                      100%
+  width                       100vw
+  height                      100vh
+
+  > *
+    white-space nowrap
+    position absolute
+    transform-origin 0% 0%
+    transition all .2s ease-in-out
 
   .sidebar
-    order                     1
-    min-width                 13em
-    max-width                 13em
-    /*width                     12px*/
+    top 0
+    left 0
+    height 100vh
+    width                     chanwidth
+    transform                 translate3d(0,0,chanz)
     padding-top               1.2em
     overflow-x                hidden
     overflow-y                scroll
-    min-height                0px
+
+    &:hover
+      width                   chanwidthhover
+
+    &:hover ~ .chat
+      transform               translate3d(chanwidthhover,0,chatz)
+
+    &:hover ~ #chatinput
+      transform               translate3d(20vw,-3vh,inputz)
 
   .chat
-    order                     2
-    moz-order                 2
-    flex                      1 1 auto
+    top 0
+    left 0
+    height 100vh
+    width                     81.1vw
+    transform                 translate3d(chanwidth,0,chatz)
     overflow-y                auto
     overflow-x                hidden
-    min-height                100%
+
+  #chatinput
+    bottom                    0
+    transform                 translate3d(19vw,-3vh,inputz)
+    z-index                   1000
+
+  .musicplayer
+    top 0
+    left 0
+    transform                 translate3d(88vw,0,catz)
 
   .catalogue
-    min-width                 30px
-    max-width                 30px
+    top 0
+    left 0
+    height 100vh
+    width                     36vw
+    transform                 translate3d(98vw,0,catz)
     overflow-y                scroll
     overflow-x                hidden
-    order                     3
+    z-index                   10000
+    background-color          #fff
 
-  // This is where the magic hovering happens
+    .releases
+      transform               translate3d(-1.9vw,0,0)
 
-  .catalogue:hover
-    min-width                 470px
-    max-width                 470px
+    &:hover
+      width                   36vw
+      transform               translate3d(64vw,0,catz)
 
-    h2
-      color                   #333
+      .releases
+        transform               translate3d(0,0,0)
 
-    h3
-      color                   #333
+      h2
+        color                 #333
+
+      h3
+        color                 #333
+
+    &:hover ~ .chat
+      transform               translate3d(1vw,0,chatz)
+
+    &:hover ~ #chatinput
+      transform               translate3d(3vw,-3vh,inputz)
+
+    &:hover ~ .sidebar
+      min-width               12px
+
+    &:hover ~ .musicplayer
+      transform               translate3d(54vw,0,catz)
 
 
-    .release
-      margin                  0 0 1.3em 1.3em
+    // should find a way to make more dry
 
+    &.show
+      h2
+        color                 #222
 
-  .catalogue:hover ~ .chat .sidebar
-    background-color          black
-    min-width                 1em
-    max-width                 1em
+      .release
+        margin                0 0 1.3em 1.3em
 
-  .catalogue:hover ~ #chatinput
-    left                      35px
-    right                     500px
+    &.show ~ #chatinput
+      transform               translate3d(88vw,0,catz)
 
-  .catalogue:hover ~ .sidebar
-    min-width                 12px
-    max-width                 12px
+    &.show ~ .sidebar
+      transform               translate3d(2vw,0,chatz)
 
-  .catalogue:hover ~ .musicplayer
-    right                     500px
+    &.show ~ .musicplayer
+      transform               translate3d(80vw,0,catz)
 
-  // should find a way to make more dry
-
-  .catalogue.show
-    min-width                 470px
-    max-width                 470px
-
-    h2
-      color                   #222
-
-    .release
-      margin                  0 0 1.3em 1.3em
-
-  .catalogue.show ~ .chat .sidebar
-    background-color          black
-    min-width                 1em !important
-    max-width                 1em !important
-
-  .catalogue.show ~ #chatinput
-    left                      35px !important
-    right                     500px !important
-
-  .catalogue.show ~ .sidebar
-    min-width                 12px !important
-    max-width                 12px !important
-
-  .catalogue.show ~ .musicplayer
-    right                     500px !important
-
-  // end
-
-  .sidebar:hover
-    min-width                 13.3em
-    max-width                 13.3em
-
-  .sidebar:hover ~ #chatinput
-    left                      14.8em
 
   // animate the hovers
 
-  .catalogue, .sidebar, #chatinput, .release, h2, h3, .musicplayer
+  .catalogue, .sidebar, .release
     transition                all 0.3s ease-in-out
+
+  .releases, .musicplayer, #chatinput, h2, h3
+    transition                all 0.25s ease-in-out

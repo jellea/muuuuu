@@ -4,12 +4,27 @@
     display                   flex
     display                   -webkit-flex
     padding                   1em 0 1em 0
+
+
+    &:hover .sender .sender
+      display                 none
+
+    &:hover .sender .time
+      display                 inline-block
+
     .sender
       width                   8em
       white-space             nowrap
       overflow                hidden
       text-overflow           ellipsis
       padding                 0.2em 0.5em 0.2em 0
+
+      .time
+        font-style            italic
+        display               none
+        transition-property   all
+        transition-duration   .5s
+        transition-timing-function cubic-bezier(0, 1, 0.5, 1)
 
     .content
       border-left             3px solid #fff

@@ -104,10 +104,10 @@
           (html 
             [:aside.catalogue
               [:h2
-                [:span.name (:whos catalogue)]
-                (if (= (:whos catalogue) "Your Library")
-                  [:a.add {:onClick #(show-add-modal state)} "add"]
-                  [:a.add {:onClick #(back-to-lib state)} "< back"])
+                (:whos catalogue)
+                ;(if (= (:whos catalogue) "Your Library")
+                  ;[:a.add {:onClick #(show-add-modal state)} "add"]
+                  ;[:a.add {:onClick #(back-to-lib state)} "< back"])
               ]
               [:div.releases
                   (if (> (count (:mostlistened yourlib)) 0) [:h3 "most listened"])

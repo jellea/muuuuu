@@ -17,8 +17,8 @@
                        rooms)))))
     ))
 
-(defn interval [state]
-  (go
-    (while true
-      (<! (timeout 10000))
-      (prunemsgs state 20))))
+;(defn interval [state]
+  ;(go
+    ;(while true
+      ;(<! (timeout 10000))
+      ;(prunemsgs state 20))))

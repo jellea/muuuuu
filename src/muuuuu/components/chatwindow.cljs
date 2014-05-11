@@ -35,9 +35,9 @@
       (html [:div {:className (str "message " msg-type)}
               [:div.sender
                 [:a (if (not= sender "You"){:onClick #(show-lib % sender state)})
-                 sender]]
-              [:div.content content]
-          ]))))
+                  [:span.sender sender]
+                  [:span.time "34 seconds ago"]]]
+              [:div.content content]]))))
 
 (defn messages
   "Messages container component"

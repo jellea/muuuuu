@@ -1,6 +1,7 @@
 (ns muuuuu.controllers.notifications
-  (:require [goog.Timer :as Timer]
-            [goog.events :as events]))
+  (:require [cljs.core.async :refer [<! chan timeout]]
+            [goog.events :as events])
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (def state (atom {:title "" :message "" :time 5000}))
 
@@ -12,9 +13,9 @@
       (.requestPermission notifi)
       (let [notification (.createNotification notifi nil title message)]
           (.show notification)
-          (let [timer (goog/Timer. (or duration 2000))]
-            (.start timer)
-            (events/listen timer Timer/TICK #(.cancel notification)))
+          (go
+            (<! (timeout 2000))
+            (.cancel notification))
         notification))))
 
 (defn on-mention [msg roomname]

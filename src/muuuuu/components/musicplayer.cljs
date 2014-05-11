@@ -43,4 +43,4 @@
               [:div.heart.hide "<3"]
               [:audio#audioplayer {:src data-url}]
               [:div.playbtn {:onClick #(toggle-play-pause state)}
-                (if is-playing ">" "||")]]))))
+                (if is-playing [:img {:src "resources/img/play2.svg"}] [:img {:src "resources/img/pause.svg"}])]]))))

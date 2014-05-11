@@ -3,7 +3,7 @@
             [om.core :as om :include-macros true]
             [muuuuu.utils :refer [get-active-rooms guid]]
             [goog.events :as events]
-            [goog.text.LoremIpsum]))
+            [cljs.core.async :refer [<! chan timeout]]
             [goog.text.LoremIpsum])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
@@ -20,7 +20,7 @@
         listening {:sender randuser
                    :content (str "is listening to " (first (usernames)) "- Track " (rand-int 22) "    Listen")
                    :msg-type "action"}
-        msg       (rand-nth (into [listening mention] (for [i (range 10)] normalmsg)))]
+        msg       (rand-nth (into [listening mention] (for [i (range 5)] normalmsg)))]
     (if (and (not (nil? randroom)) (not (nil? randuser)))
       (om/transact! state [:rooms randroom :msgs]
           (fn [msgs] (conj msgs msg))))))
@@ -47,5 +47,9 @@
 (defn mock [state]
   (go
     (while true
-      (<! (timeout 500))
+      (<! (timeout (rand-int 2000 5000)))
       (rand-action state))))
+
+  ;(let [timer (goog/Timer. 2500)]
+    ;(.start timer)
+    ;(events/listen timer Timer/TICK #(rand-action state))))

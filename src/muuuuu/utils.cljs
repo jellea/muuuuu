@@ -34,12 +34,10 @@
 
 (defn get-next-color "Returns next color as a string" []
   (swap! lastUsedColor #(if (< % 19) (inc %) 0))
-  (nth colors @lastUsedColor)
-)
+  (nth colors @lastUsedColor))
 
 (defn current-room [rooms-state]
-  (first (filter (fn [r] (= (:inviewport (second r)) true)) rooms-state))
-)
+  (first (filter (fn [r] (= (:inviewport (second r)) true)) rooms-state)))
 
 (defn get-active-rooms "Retursn a list of only active rooms" [rooms]
   (filter #(true? (:active (second %))) rooms))

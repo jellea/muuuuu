@@ -23,10 +23,10 @@
 
 (def app-state
   (atom {:yourname (str "Guest" (rand-int 9999))
-         :yourlib {:mostlistened [] ;muuuuu.mock.albumcovers
+         :yourlib {:mostlistened muuuuu.mock/albumcovers
                    :files []}
          :rooms muuuuu.mock.make-roomslist
-         :player {:tracknumber "Nothing playing at the moment"
+         :player {:tracknumber ""
                   :tracktitle ""
                   :artist ""
                   :album ""
@@ -55,10 +55,10 @@
     om/IRender
     (render [_]
       (dom/div #js {:className "container"}
-        (om/build chatwindow/init (:rooms state) {:opts {:state state}})
         (om/build catalogue/init {:yourlib (:yourlib state)
                                   :catalogue (:catalogue state)} {:opts {:state state}})
         (om/build roomlist/init (:rooms state))
+        (om/build chatwindow/init (:rooms state) {:opts {:state state}})
         (om/build chatinput/init state)
         (om/build modalwindow/modal (:modal state))
         (om/build musicplayer/init (:player state))))))
